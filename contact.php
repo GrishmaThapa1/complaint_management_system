@@ -23,14 +23,14 @@ if (isset($_POST['send_message'])) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'grishmathp@gmail.com'; // your email
-        $mail->Password   = 'txeg lonp ieyh mjul';   // gmail app password
+        $mail->Username   = 'grishmathp@gmail.com';
+        $mail->Password   = 'txeg lonp ieyh mjul';
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
         // Recipients
         $mail->setFrom($email, $name);
-        $mail->addAddress('grishmathp@gmail.com', 'Complaint Management System'); // your email
+        $mail->addAddress('grishmathp@gmail.com', 'Complaint Management System');
 
         // Content
         $mail->isHTML(true);
@@ -62,7 +62,7 @@ if (isset($_POST['send_message'])) {
 
             <div class="contact-form">
                 <h3>Send a Message</h3>
-                <?php if (!empty($messageSent)) echo "<p class='success'>{$messageSent}</p>"; ?>
+                <?php if (!empty($messageSent)) echo "<p id='successMsg' class='message success'>{$messageSent}</p>"; ?>
                 <form action="" method="post">
                     <input type="text" name="name" placeholder="Your Name" required>
                     <input type="email" name="email" placeholder="Your Email" required>
@@ -80,5 +80,6 @@ if (isset($_POST['send_message'])) {
         </div>
     </div>
 </section>
+<script src="Js/script.js"></script>
 
 <?php include "includes/footer.php"; ?>

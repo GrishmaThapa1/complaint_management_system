@@ -4,6 +4,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php");
     exit;
 }
+
 include "../includes/db.php";
 include "../includes/header.php";
 
@@ -30,11 +31,20 @@ $complaint = $result->fetch_assoc();
 
 <div class="complaint-view">
     <h2>Complaint Details</h2>
-    <p><strong>Complaint:</strong> <?= htmlspecialchars($complaint['complaint_text']) ?></p>
-    <p><strong>Status:</strong> <?= htmlspecialchars($complaint['status']) ?></p>
-    <p><strong>Date:</strong> <?= date("d M Y", strtotime($complaint['created_at'])) ?></p>
 
-    <a href="dashboard.php" class="btn btn-back">Back to Dashboard</a>
+    <p><strong>Complaint:</strong> <?= htmlspecialchars($complaint['complaint_text']) ?></p>
+
+    <p><strong>Status:</strong>
+        <span class="status <?= strtolower($complaint['status']) ?>">
+            <?= htmlspecialchars($complaint['status']) ?>
+        </span>
+    </p>
+
+    <p class="date-line"><strong>Date:</strong> <?= date("d M Y", strtotime($complaint['created_at'])) ?></p>
+
+    <div class="btn-center">
+        <a href="dashboard.php" class="btn-back">Back to Dashboard</a>
+    </div>
 </div>
 
 <?php include "../includes/footer.php"; ?>

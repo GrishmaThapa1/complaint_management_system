@@ -43,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user['role'] === "admin") {
                 $_SESSION['admin_id'] = $user['id'];
                 $_SESSION['name'] = $user['username'];
-                header("Location: admin/dashboard.php");
+                header("Location: /complaint_management/admin/dashboard.php");
             } else {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
-                header("Location: user/dashboard.php");
+                header("Location: /complaint_management/user/dashboard.php");
             }
             exit();
         } else {
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/complaint_management/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .password-wrapper {
@@ -120,8 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="text-center">
-                <p>Don't have an account? <a href="user/register.php">Register</a></p>
-                <p>Forgot password? <a href="user/reset_password.php">Reset Password</a></p>
+                <p>Don't have an account? <a href="/complaint_management/user/register.php">Register</a></p>
+                <p>Forgot password? <a href="/complaint_management/reset_password.php">Reset Password</a></p>
             </div>
         </div>
     </section>

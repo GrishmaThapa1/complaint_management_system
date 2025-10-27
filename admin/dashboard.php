@@ -10,7 +10,7 @@ include "../includes/header.php";
 
 // Show success message if exists
 if (isset($_SESSION['success_message'])) {
-    echo "<p style='color:green; font-weight:bold;'>" . $_SESSION['success_message'] . "</p>";
+    echo "<p class='success-message'>" . $_SESSION['success_message'] . "</p>";
     unset($_SESSION['success_message']);
 }
 
@@ -30,24 +30,22 @@ $row = $result->fetch_assoc();
 $resolved_complaints = $row['resolved'];
 ?>
 
-<div class="admin-dashboard dashboard-container">
+<div class="admin-dashboard">
     <h2>Admin Dashboard</h2>
 
-    <?php if (isset($_SESSION['success_message'])): ?>
-        <p class="success-message"><?php echo $_SESSION['success_message'];
-                                    unset($_SESSION['success_message']); ?></p>
-    <?php endif; ?>
-
     <div class="cards">
-        <div class="card">
+        <div class="card total">
+            <i class="fas fa-list-alt"></i>
             <h2><?php echo $total_complaints; ?></h2>
             <p>Total Complaints</p>
         </div>
-        <div class="card">
+        <div class="card pending">
+            <i class="fas fa-clock"></i>
             <h2><?php echo $pending_complaints; ?></h2>
             <p>Pending Complaints</p>
         </div>
-        <div class="card">
+        <div class="card resolved">
+            <i class="fas fa-check-circle"></i>
             <h2><?php echo $resolved_complaints; ?></h2>
             <p>Resolved Complaints</p>
         </div>
@@ -55,7 +53,7 @@ $resolved_complaints = $row['resolved'];
 
     <div class="dashboard-buttons">
         <a href="view_complaints.php" class="btn">View Complaints</a>
-        
     </div>
 </div>
+
 <?php include "../includes/footer.php"; ?>
