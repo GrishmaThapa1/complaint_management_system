@@ -9,7 +9,7 @@ include "includes/header.php";
         <div class="about-text">
             <h2>About Us</h2>
             <p>
-                The Complaint and Management System is designed to make the complaint process simpler, transparent, and efficient for both users and administrators.
+                The Complaint Management System is designed to make the complaint process simpler, transparent, and efficient for both users and administrators.
             </p>
             <p>
                 Users can submit their complaints online, track their progress, and receive timely updates.
