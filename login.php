@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        $user['role'] = "admin"; // backend sets role
+        $user['role'] = "admin";
     } else {
         // Check users table
         $stmt = $conn->prepare("SELECT id, name, email, password, role FROM users WHERE email=?");
@@ -66,6 +66,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            user-select: none;
+        }
+
+        .password-toggle:hover {
+            color: #333;
+        }
+    </style>
 </head>
 
 <body class="login-page">
@@ -85,7 +110,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+                        <i class="fa-solid fa-eye-slash password-toggle" id="togglePassword"></i>
+                    </div>
                 </div>
 
                 <input type="submit" value="Login" class="btn-login">
@@ -97,6 +125,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </section>
+
+    <script>
+        // Password toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordField = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+
+            this.classList.toggle('fa-eye-slash');
+            this.classList.toggle('fa-eye');
+        });
+
+        // Form validation
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            let username = document.getElementById('username_or_email').value.trim();
+            let password = document.getElementById('password').value.trim();
+
+            if (username === '' || password === '') {
+                alert('Please fill in all fields.');
+                event.preventDefault();
+            }
+        });
+    </script>
 
 </body>
 
