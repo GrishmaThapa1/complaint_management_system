@@ -37,6 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Set session based on role
             $_SESSION['role'] = $user['role'];
 
+            // Set flash message
+            $_SESSION['success'] = "Logged in successfully!";
+
             if ($user['role'] === "admin") {
                 $_SESSION['admin_id'] = $user['id'];
                 $_SESSION['name'] = $user['username'];
@@ -136,7 +139,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     </script>
     <script src="/complaint_management/Js/script.js"></script>
-
 </body>
-
 </html>
