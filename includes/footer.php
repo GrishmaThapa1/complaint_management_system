@@ -26,6 +26,8 @@
         &copy; <?php echo date("Y"); ?> Complaint Management System. All rights reserved.
     </div>
 </footer>
+<script src="/complaint_management/Js/script.js"></script>
+
 </body>
 
 </html>

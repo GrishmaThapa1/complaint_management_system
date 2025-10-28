@@ -43,13 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user['role'] === "admin") {
                 $_SESSION['admin_id'] = $user['id'];
                 $_SESSION['name'] = $user['username'];
-                header("Location: /complaint_management/admin/dashboard.php");
             } else {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
-                header("Location: /complaint_management/user/dashboard.php");
             }
-            exit();
+            $success = "Login successful!";
         } else {
             $error = "Invalid password.";
         }
@@ -58,8 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -94,24 +93,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="login-page">
-
     <section class="login-section">
         <div class="login-container">
             <h2>Login</h2>
 
-            <?php if ($success) echo "<p class='success'>$success</p>"; ?>
-            <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
+            <?php if ($success): ?>
+                <p class="success"><?= $success ?></p>
+            <?php endif; ?>
+            <?php if ($error): ?>
+                <p class="error"><?= $error ?></p>
+            <?php endif; ?>
 
-            <form method="POST" id="loginForm">
+            <form method="POST" id="loginForm" autocomplete="off">
                 <div class="form-group">
                     <label for="username_or_email">Username or Email</label>
-                    <input type="text" id="username_or_email" name="username_or_email" placeholder="Enter username or email" required>
+                    <input type="text" id="username_or_email" name="username_or_email" placeholder="Enter username or email" autocomplete="off" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+                        <input type="password" id="password" name="password" placeholder="Enter password" autocomplete="new-password" required>
                         <i class="fa-solid fa-eye-slash password-toggle" id="togglePassword"></i>
                     </div>
                 </div>
@@ -126,6 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </section>
 
+    <!-- External JS -->
+    <script src="/complaint_management/Js/script.js"></script>
+
     <script>
         // Password toggle
         const togglePassword = document.getElementById('togglePassword');
@@ -138,19 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             this.classList.toggle('fa-eye-slash');
             this.classList.toggle('fa-eye');
         });
-
-        // Form validation
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            let username = document.getElementById('username_or_email').value.trim();
-            let password = document.getElementById('password').value.trim();
-
-            if (username === '' || password === '') {
-                alert('Please fill in all fields.');
-                event.preventDefault();
-            }
-        });
     </script>
-
 </body>
 
 </html>

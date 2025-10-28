@@ -8,6 +8,8 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $error = "";
+$success = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = htmlspecialchars(trim($_POST['name']));
     $email = htmlspecialchars(trim($_POST['email']));
@@ -35,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare("INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, 'user', NOW())");
             $stmt->bind_param("sss", $name, $email, $hashedPassword);
             $stmt->execute();
-            $_SESSION['success'] = "Registration successful! Please log in.";
-            header("Location: ../login.php");
-            exit;
+
+            $success = "User registered successfully!";
+            $name = $email = $password = $confirmPassword = "";
         }
     }
 }
@@ -82,25 +84,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="registration-container">
         <h2>User Registration</h2>
 
-        <?php if (!empty($error)): ?>
-            <p class="error"><?= $error ?></p>
-        <?php endif; ?>
+        <!-- Success or Error Message -->
+        <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
+        <?php if (!empty($success)) echo "<p class='success'>$success</p>"; ?>
 
-        <form method="post" id="registerForm">
+        <form method="post" id="registerForm" autocomplete="off">
+            
+            
+
             <div class="form-group">
                 <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" value="<?= htmlspecialchars($name ?? '') ?>" autocomplete="off" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <input type="email" id="email" name="email" placeholder="Enter your email" value="<?= htmlspecialchars($email ?? '') ?>" autocomplete="off" required>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="password-wrapper">
-                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                    <input type="password" id="password" name="password" placeholder="Enter password" autocomplete="new-password" required>
                     <i class="fa-solid fa-eye-slash password-toggle" id="togglePassword"></i>
                 </div>
             </div>
@@ -108,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="confirm_password">Confirm Password</label>
                 <div class="password-wrapper">
-                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password" autocomplete="new-password" required>
                     <i class="fa-solid fa-eye-slash password-toggle" id="toggleConfirmPassword"></i>
                 </div>
             </div>
@@ -121,43 +126,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
+    <script src="/complaint_management/Js/script.js"></script>
     <script>
-        // Password toggle
         const togglePassword = document.getElementById('togglePassword');
         const passwordField = document.getElementById('password');
-
         togglePassword.addEventListener('click', function() {
             const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordField.setAttribute('type', type);
-
             this.classList.toggle('fa-eye-slash');
             this.classList.toggle('fa-eye');
         });
 
-        // Confirm Password toggle
         const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
         const confirmPasswordField = document.getElementById('confirm_password');
-
         toggleConfirmPassword.addEventListener('click', function() {
             const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
             confirmPasswordField.setAttribute('type', type);
-
             this.classList.toggle('fa-eye-slash');
             this.classList.toggle('fa-eye');
         });
 
-        // Form validation
         document.getElementById('registerForm').addEventListener('submit', function(event) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-
-            if (password !== confirmPassword) {
+            if (document.getElementById('password').value !== document.getElementById('confirm_password').value) {
                 alert('Passwords do not match!');
                 event.preventDefault();
             }
         });
     </script>
-
 </body>
 
 </html>
