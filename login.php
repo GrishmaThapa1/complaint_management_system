@@ -4,18 +4,14 @@ include "includes/db.php";
 
 $error = "";
 
-// Show success message from registration
-$success = "";
-if (!empty($_SESSION['success'])) {
-    $success = $_SESSION['success'];
-    unset($_SESSION['success']);
-}
-
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usernameOrEmail = trim($_POST['username_or_email']);
     $password = $_POST['password'];
 
-    // Check if admin first
+    $user = null;
+
+    // Check if admin
     $stmt = $conn->prepare("SELECT id, username, password FROM admins WHERE username=?");
     $stmt->bind_param("s", $usernameOrEmail);
     $stmt->execute();
@@ -25,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $result->fetch_assoc();
         $user['role'] = "admin";
     } else {
-        // Check users table
+        // Check regular users
         $stmt = $conn->prepare("SELECT id, name, email, password, role FROM users WHERE email=?");
         $stmt->bind_param("s", $usernameOrEmail);
         $stmt->execute();
@@ -36,18 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if (!empty($user)) {
+    if ($user) {
         if (password_verify($password, $user['password'])) {
+            // Set session based on role
             $_SESSION['role'] = $user['role'];
 
             if ($user['role'] === "admin") {
                 $_SESSION['admin_id'] = $user['id'];
                 $_SESSION['name'] = $user['username'];
+                header("Location: /complaint_management/admin/dashboard.php");
+                exit();
             } else {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
+                header("Location: /complaint_management/user/dashboard.php");
+                exit();
             }
-            $success = "Login successful!";
         } else {
             $error = "Invalid password.";
         }
@@ -83,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transform: translateY(-50%);
             cursor: pointer;
             color: #666;
-            user-select: none;
         }
 
         .password-toggle:hover {
@@ -97,9 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="login-container">
             <h2>Login</h2>
 
-            <?php if ($success): ?>
-                <p class="success"><?= $success ?></p>
-            <?php endif; ?>
             <?php if ($error): ?>
                 <p class="error"><?= $error ?></p>
             <?php endif; ?>
@@ -107,13 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST" id="loginForm" autocomplete="off">
                 <div class="form-group">
                     <label for="username_or_email">Username or Email</label>
-                    <input type="text" id="username_or_email" name="username_or_email" placeholder="Enter username or email" autocomplete="off" required>
+                    <input type="text" id="username_or_email" name="username_or_email" placeholder="Enter username or email" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" name="password" placeholder="Enter password" autocomplete="new-password" required>
+                        <input type="password" id="password" name="password" placeholder="Enter password" required>
                         <i class="fa-solid fa-eye-slash password-toggle" id="togglePassword"></i>
                     </div>
                 </div>
@@ -128,22 +124,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </section>
 
-    <!-- External JS -->
-    <script src="/complaint_management/Js/script.js"></script>
-
     <script>
-        // Password toggle
         const togglePassword = document.getElementById('togglePassword');
         const passwordField = document.getElementById('password');
 
         togglePassword.addEventListener('click', function() {
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
-
+            const type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
             this.classList.toggle('fa-eye-slash');
             this.classList.toggle('fa-eye');
         });
     </script>
+    <script src="/complaint_management/Js/script.js"></script>
+
 </body>
 
 </html>
