@@ -25,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("iss", $user_id, $subject, $complaint_text);
 
         if ($stmt->execute()) {
-            $success = "Complaint submitted successfully!";
+            $success = "✅ Complaint submitted successfully!";
         } else {
-            $error = "Failed to submit complaint. Try again.";
+            $error = "❌ Failed to submit complaint. Try again.";
         }
     }
 }
@@ -39,12 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>Submit Complaint</h2>
 
             <?php if (!empty($error)): ?>
-                <p class="error message"><?= $error ?></p>
+                <p id="errorMsg" class="error-msg"><?= $error ?></p>
             <?php endif; ?>
 
             <?php if (!empty($success)): ?>
-                <!-- Added id for external JS redirect -->
-                <p id="successMsg" class="success message"><?= $success ?></p>
+                <p id="successMsg" class="success-msg"><?= $success ?></p>
             <?php endif; ?>
 
             <form method="post">
@@ -60,7 +59,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </main>
-   
+
+    <script>
+        // Auto fade out messages
+        document.addEventListener("DOMContentLoaded", function() {
+            const successMsg = document.getElementById("successMsg");
+            const errorMsg = document.getElementById("errorMsg");
+
+            [successMsg, errorMsg].forEach(msg => {
+                if (msg) {
+                    setTimeout(() => {
+                        msg.style.opacity = "0";
+                        msg.style.transform = "translateY(-10px)";
+                        setTimeout(() => msg.remove(), 1000);
+                    }, 2500); // 2.5 seconds visible
+                }
+            });
+        });
+    </script>
 
     <?php include "../includes/footer.php"; ?>
 </body>

@@ -104,6 +104,6 @@ include __DIR__ . '/../includes/header.php';
         </form>
     </div>
 
-    <script src="/complaint_management/Js/script.js"></script>
+  
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

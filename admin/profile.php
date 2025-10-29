@@ -33,7 +33,7 @@ include __DIR__ . '/../includes/header.php';
 
         <p><strong>Username:</strong> <?php echo htmlspecialchars($admin['username']); ?></p>
         <p><strong>Email:</strong> <?php echo htmlspecialchars($admin['email']); ?></p>
-        <p><strong>Role:</strong> <?php echo htmlspecialchars($admin['role']); ?></p>
+        
 
         <a href="edit_profile.php" class="btn">Edit Profile</a>
     </div>

@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -75,29 +75,31 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="/complaint_management/css/style.css">
 </head>
 
-<body>
-    <div class="reset-page">
-        <div class="login-container">
-            <h2>Reset Password</h2>
-            <form method="POST" action="">
-                <input type="email" name="email" placeholder="Enter your registered email" required>
-                <button type="submit" name="submit">Send OTP</button>
-            </form>
+<body class="reset-page">
+    <div class="login-container">
+        <h2>Reset Password</h2>
+        <form method="POST" action="">
+            <input type="email" name="email" placeholder="Enter your registered email" required>
+            <button type="submit" name="submit">Send OTP</button>
+        </form>
 
-            <?php if (!empty($message)) echo "<p class='success'>$message</p>"; ?>
+        <?php if (!empty($message)): ?>
+            <p class="<?= empty($_SESSION['role']) ? 'error' : 'success' ?>"><?= $message ?></p>
+        <?php endif; ?>
 
-            <p><a href="/complaint_management/login.php" class="back-link">← Back to Login</a></p>
-        </div>
+        <p><a href="/complaint_management/login.php" class="back-link">← Back to Login</a></p>
     </div>
 
     <?php if ($redirect): ?>
         <script>
-            // Redirect after 2 seconds
-            setTimeout(function() {
+            // Redirect to OTP verification after 2 seconds
+            setTimeout(() => {
                 window.location.href = '/complaint_management/verify_otp.php';
             }, 2000);
         </script>
     <?php endif; ?>
+
+    <script src="/complaint_management/Js/script.js"></script>
 </body>
 
 </html>

@@ -51,20 +51,16 @@ $complaints = $stmt->get_result();
                 <a href="submit_complaint.php" class="btn">Submit Complaint</a>
             </div>
 
-            <!-- Filter Buttons & Search -->
+            <!-- Filter Buttons -->
             <div class="filter-buttons" style="margin-bottom:20px; justify-content:center; gap:10px;">
                 <a href="?status=all" class="filter-btn <?= $status_filter === 'all' ? 'active' : '' ?>">All</a>
                 <a href="?status=pending" class="filter-btn <?= $status_filter === 'pending' ? 'active' : '' ?>">Pending</a>
                 <a href="?status=resolved" class="filter-btn <?= $status_filter === 'resolved' ? 'active' : '' ?>">Resolved</a>
             </div>
 
+            <!-- Search Form (dropdown removed) -->
             <form method="GET" style="display:flex; justify-content:center; gap:10px; margin-bottom:25px; flex-wrap:wrap;">
                 <input type="text" name="search" placeholder="Search by Subject or Complaint..." value="<?= htmlspecialchars($search) ?>" style="padding:8px 12px; border-radius:6px; border:1px solid #ccc;">
-                <select name="status" style="padding:8px 12px; border-radius:6px; border:1px solid #ccc;">
-                    <option value="all" <?= $status_filter === 'all' ? 'selected' : '' ?>>All Status</option>
-                    <option value="pending" <?= $status_filter === 'pending' ? 'selected' : '' ?>>Pending</option>
-                    <option value="resolved" <?= $status_filter === 'resolved' ? 'selected' : '' ?>>Resolved</option>
-                </select>
                 <button type="submit" style="padding:8px 16px; background:#5563DE; color:white; border:none; border-radius:6px; cursor:pointer;">Search</button>
             </form>
 

@@ -35,6 +35,6 @@ include __DIR__ . '/../includes/header.php';
         <a href="edit_profile.php" class="btn">Edit Profile</a>
     </div>
 
-    <script src="/complaint_management/Js/script.js"></script>
+   
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
