@@ -1,42 +1,57 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
+html, body {
+    width: 100%;
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
 }
 
-/* Consistent label styling across all forms */
+* {
+    box-sizing: border-box;
+}
+
+
 label {
     font-weight: bold;
     margin-bottom: 5px;
     display: block;
 }
 
-/* Success & Error message  */
-.error {
-    color: red;
+ /* Success & Error Messages  */
+.error, .error-msg, .error-message {
+    background: #f8d7da;
+    color: #842029;
+    border: 1px solid #842029;
     font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 6px;
     margin-bottom: 10px;
 }
 
-.success {
-    color: green;
+.success, .success-msg, .success-message, .message {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
     font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 6px;
     margin-bottom: 10px;
 }
-
 /* header and navigation */
 header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
+    background-color: #007BFF;
 }
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #007BFF;
     padding: 15px 40px;
 }
 
@@ -45,6 +60,13 @@ header {
     width: auto;
     display: block;
 }
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 .nav-links a {
     color: white;
     text-decoration: none;
@@ -57,7 +79,8 @@ header {
     text-decoration: underline;
     color: #e0e0e0;
 }
-/* User dropdown menu */
+
+/* User Dropdown */
 .user-dropdown {
     position: relative;
     display: inline-flex;
@@ -65,14 +88,11 @@ header {
     cursor: pointer;
     margin-left: 20px;
     z-index: 10000;
-    font-size: 0;
 }
 
 .user-dropdown i {
     color: white;
     font-size: 18px;
-    vertical-align: middle;
-    line-height: 1;
     transition: color 0.3s ease;
 }
 
@@ -91,7 +111,6 @@ header {
     border-radius: 5px;
     overflow: hidden;
     z-index: 10001;
-    font-size: 14px;
 }
 
 .dropdown-content.show {
@@ -110,23 +129,25 @@ header {
     background-color: #f1f1f1;
 }
 
-/*  main content stays below dropdown */
+/* Content spacing below fixed header */
+main, section, .content,
 .update-status-container,
 .submit-container,
 .profile-container,
 .container {
+    margin-top: 80px;
     position: relative;
     z-index: 1;
 }
-/* --- Home Banner --- */
+/* Hero Banner */
 .home-banner {
     position: relative;
     width: 100vw;
     min-height: 100vh;
-    padding: 80px 0;
-    margin-left: 0;
-    margin-right: 0;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../Image/image.jpg') center center / cover no-repeat;
+    padding: 80px 20px;
+    margin: 0;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('../Image/image.jpg') center center / cover no-repeat;
     color: white;
     text-align: center;
     display: flex;
@@ -135,188 +156,111 @@ header {
     align-items: center;
 }
 
+/* Heading */
 .home-banner h1 {
-    font-size: 36px;
-    margin: 0 0 15px;
+    font-size: 48px;
+    margin-bottom: 25px; 
+    font-weight: 700;
+    line-height: 1.2;
 }
 
+
 .home-banner p {
-    font-size: 18px;
-    margin: 0 0 20px;
+    font-size: 22px;     
+    max-width: 700px;
+    line-height: 1.8;    
+    margin: 0 auto;       
+    color: #fff;          
+    text-align: center;   
 }
 
 .home-banner a {
-    display: inline-block;
-    margin: 5px;
-    padding: 10px 20px;
-    background: white;
-    color: #007BFF;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
+    display: none;
 }
 
-.home-banner a:hover {
-    background: #e9ecef;
-    opacity: 0.9;
-}
-
-/* --- Features Section --- */
-.features {
-    padding: 60px 20px;
-    background: linear-gradient(135deg, #f7f9fc, #e9ecef);
-}
-
-.features h2 {
+.features,
+.section-facilities,
+.how-it-works,
+.why-choose-vision {
+    padding: 40px 20px;
     text-align: center;
-    font-size: 32px;
+    margin: 0;
+}
+
+.features {
+    background-color: #f7f9fc;
+}
+
+.section-facilities {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+}
+
+.how-it-works {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.why-choose-vision {
+    background: #f0f2f5;
+}
+
+.features h2,
+.section-facilities h2,
+.how-it-works h2,
+.why-choose-vision h2 {
+    font-size: 36px;
     color: #007BFF;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 40px;
-    position: relative;
 }
-
-.features h2::after {
-    content: none;
-}
-
-.features .container {
+.features .container,
+.facilities-base,
+.timeline,
+.why-choose-vision .container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 30px;
 }
-
-.features .feature-box {
+.feature-box,
+.facility-box,
+.timeline-step,
+.why-choose-vision .box {
     background: white;
     padding: 30px;
     border-radius: 15px;
-    width: 300px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-align: center;
-}
-
-.features .feature-box:hover {
-    transform: translateY(-10px);
+    width: 320px;
     box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    text-align: center;
 }
-
-.features .feature-box h3 {
+.feature-box:hover,
+.facility-box:hover,
+.timeline-step:hover,
+.why-choose-vision .box:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+.feature-box h3,
+.facility-box h3,
+.timeline-step h3,
+.why-choose-vision h3 {
     color: #007BFF;
-    font-size: 22px;
-    margin-bottom: 10px;
+    font-size: 24px;
+    margin-bottom: 15px;
 }
 
-.features .feature-box p {
-    font-size: 16px;
+.feature-box p,
+.facility-box p,
+.timeline-step p,
+.why-choose-vision p {
+    font-size: 17px;
     color: #555;
+    line-height: 1.6;
 }
 
-/* --- Facilities Section --- */
-.section-facilities {
-    padding: 60px 20px;
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    text-align: center;
-}
-
-.section-facilities h2 {
-    font-size: 32px;
-    color: #007BFF;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-}
-
-.section-facilities p {
-    font-size: 18px;
-    color: #555;
-    margin-bottom: 40px;
-}
-
-.facilities-base {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-}
-
-.facility-box {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    width: 300px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.facility-box:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-}
-
-.facility-icon {
-    font-size: 40px;
-    color: white;
-    background: #007BFF;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.facility-box h3 {
-    color: #007BFF;
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-.facility-box p {
-    font-size: 16px;
-    color: #555;
-}
-
-/* --- How It Works Section --- */
-.how-it-works {
-    padding: 60px 20px;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    text-align: center;
-}
-
-.how-it-works h2 {
-    font-size: 32px;
-    color: #007BFF;
-    text-transform: uppercase;
-    margin-bottom: 40px;
-}
-
-.timeline {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-}
-
-.timeline-step {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    width: 300px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.timeline-step:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-}
-
+/* Icons */
+.facility-icon,
 .timeline-step .circle {
     font-size: 40px;
     color: white;
@@ -327,27 +271,21 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin: 0 auto 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-.timeline-step h3 {
-    color: #007BFF;
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-.timeline-step p {
-    font-size: 16px;
-    color: #555;
-}
-/* about us */
+/* About Section */
 .about-section {
     position: relative;
-    padding: 80px 20px;
+    padding: 0; 
     background: url('../Image/about.jpg') center/cover no-repeat;
     color: white;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh; /* full height image */
 }
 
 .about-section::before {
@@ -357,7 +295,7 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.5); 
     z-index: 1;
 }
 
@@ -365,71 +303,75 @@ header {
     position: relative;
     z-index: 2;
     max-width: 900px;
-    margin: auto;
+    width: 100%;
+    padding: 30px 20px; 
+}
+.about-text {
+    text-align: center;
 }
 
 .about-text h2 {
-    font-size: 36px;
+    font-size: 42px; 
     text-transform: uppercase;
-    margin-bottom: 20px;
-    color: #fff;
+    margin-bottom: 25px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 
 .about-text p {
-    font-size: 18px;
-    line-height: 1.8;
-    color: #ddd;
-    margin-bottom: 15px;
+    font-size: 20px; 
+    line-height: 2;   
+    color: #fff;
+    margin-bottom: 20px;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
 }
 
-.about-image {
-    display: none;
+
+.section-quote {
+    background: #f8f9fa; 
+    text-align: center;
+    padding: 30px 20px;
+    margin: 0; 
 }
 
-/* Why Choose Us & Vision Section */
+.section-quote h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: #007BFF;
+}
+
+.section-quote p {
+    font-size: 18px;
+    font-style: italic;
+    color: #555;
+}
+
+/* Why Choose Us / Our Vision Section */
 .why-choose-vision {
-    padding: 50px 20px;
-    background: #ffffff;
-    text-align: center;
+    background: #f0f2f5; 
+    padding: 40px 20px 60px 20px; 
+    margin: 0;
 }
 
 .why-choose-vision .container {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 30px;
-    justify-content: center;
-    max-width: 1200px;
-    margin: auto;
 }
 
 .why-choose-vision .box {
-    background: white;
-    padding: 25px;
+    background: #ffffff;
+    padding: 30px;
     border-radius: 15px;
     width: 300px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.why-choose-vision .box:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-}
 
-.why-choose-vision h3 {
-    color: #007BFF;
-    font-size: 22px;
-    margin-bottom: 10px;
-}
 
-.why-choose-vision p {
-    font-size: 16px;
-    color: #555;
-}
 
-/* contact */
+/* Contact Section */
 .contact-section {
     background: white;
     padding: 50px 20px;
@@ -482,43 +424,35 @@ header {
     margin-bottom: 15px;
 }
 
-.contact-form input[type="text"],
-.contact-form input[type="email"],
-.contact-form textarea {
+/* Form Inputs */
+input[type="text"],
+input[type="email"],
+input[type="file"],
+textarea,
+select {
     width: 100%;
-    padding: 10px;
-    margin: 5px 0;
+    padding: 12px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 15px;
-    font-family: 'Poppins', sans-serif;
-    color: #333;
+    font-family: 'Poppins', Arial, sans-serif;
     background-color: #f9f9f9;
-    box-sizing: border-box;
     transition: all 0.3s ease;
 }
 
-.contact-form input[type="text"]:focus,
-.contact-form input[type="email"]:focus,
-.contact-form textarea:focus {
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
     outline: none;
     border-color: #007BFF;
     background-color: #fff;
 }
 
-.contact-form input[type="submit"] {
-    background: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background 0.3s ease;
-}
-
-.contact-form input[type="submit"]:hover {
-    background: #0056b3;
+textarea {
+    resize: vertical;
+    min-height: 150px;
 }
 
 .contact-details {
@@ -538,60 +472,90 @@ header {
     margin: 5px 0;
 }
 
-/* --- Login & Registration Pages --- */
+ /* AUTHENTICATION PAGES (Login/Register/Reset) */
 body.login-page,
-body.registration-page {
+body.registration-page,
+.reset-page,
+.verify-page {
     background-color: #5563DE;
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 40px 20px;
     min-height: 100vh;
+}
+
+body.login-page {
+    padding: 0;
+    overflow: hidden;
+}
+
+body.registration-page,
+.reset-page,
+.verify-page {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 40px 20px;
 }
 
-/* Containers */
-body.login-page .login-container,
-body.registration-page .registration-container {
+.login-container,
+.registration-container {
     background: #fff;
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 400px;
-    margin: 0 auto;
     text-align: left;
 }
 
-/* Headings */
+body.login-page .login-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.reset-page .login-container,
+.verify-page .login-container {
+    max-width: 360px;
+    padding: 30px 35px;
+    text-align: center;
+}
+
 body.login-page h2,
-body.registration-page h2 {
+body.registration-page h2,
+.reset-page h2,
+.verify-page h2 {
     color: #333;
     margin-bottom: 20px;
     font-size: 28px;
     text-align: center;
 }
 
-/* Form groups */
-body.login-page .form-group,
-body.registration-page .form-group {
+.reset-page h2,
+.verify-page h2 {
+    color: #007bff;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+/* Form Groups */
+.form-group {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
 }
 
-/* Labels */
-body.login-page .form-group label,
-body.registration-page .form-group label {
+.form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: 500;
 }
 
-/* Input fields */
 body.login-page input,
-body.registration-page input {
+body.registration-page input,
+.reset-page input,
+.verify-page input {
     width: 100%;
     height: 44px;
     padding: 12px;
@@ -600,32 +564,31 @@ body.registration-page input {
     font-size: 14px;
     background-color: #fff;
     color: #333;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
     margin: 0;
     transition: all 0.2s ease;
 }
 
-/* Password wrapper for eye icon */
-body.login-page .password-wrapper,
-body.registration-page .password-wrapper,
-body.reset-page .password-wrapper {
+body.login-page input:focus,
+body.registration-page input:focus,
+.reset-page input:focus,
+.verify-page input:focus {
+    outline: none;
+    border-color: #5563DE;
+    box-shadow: 0 0 5px rgba(85, 99, 222, 0.3);
+}
+
+/* Password Wrapper & Toggle */
+.password-wrapper {
     position: relative;
     width: 100%;
 }
 
-body.login-page .password-wrapper input,
-body.registration-page .password-wrapper input,
-body.reset-page .password-wrapper input {
+.password-wrapper input {
     padding: 12px 40px 12px 12px;
     height: 44px;
-    box-sizing: border-box;
 }
 
-/* Password toggle icon */
-body.login-page .password-toggle,
-body.registration-page .password-toggle,
-body.reset-page .password-toggle {
+.password-toggle {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -634,194 +597,75 @@ body.reset-page .password-toggle {
     color: #666;
 }
 
-body.login-page .password-toggle:hover,
-body.registration-page .password-toggle:hover,
-body.reset-page .password-toggle:hover {
+.password-toggle:hover {
     color: #333;
 }
 
-/* Focus effect */
-body.login-page input:focus,
-body.registration-page input:focus,
-body.reset-page input:focus {
-    outline: none;
-    border-color: #5563DE;
-    box-shadow: 0 0 5px rgba(85, 99, 222, 0.3);
-}
+/* Submit Buttons - Fixed for all browsers */
+input[type="submit"],
+button[type="submit"],
+.btn-submit,
+.btn-login,
+.btn-register {
+    -webkit-appearance: none;
+    -moz-appearance: none;    
+    appearance: none;         
 
-/* Placeholder */
-body.login-page input::placeholder,
-body.registration-page input::placeholder {
-    color: #999;
-}
-
-/* Submit buttons */
-body.login-page input[type="submit"],
-body.registration-page input[type="submit"] {
+    display: inline-block;
     width: 100%;
     padding: 12px;
-    background: #5563DE;
-    color: #fff;
-    border: none;
+    background-color: #5563DE !important; 
+    color: #fff !important;               
+    border: none !important;
     border-radius: 5px;
     font-size: 16px;
+    font-weight: 500;
+    text-align: center;
     cursor: pointer;
-    margin-top: 10px;
-    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: none;
+    transition: none; 
 }
 
-body.login-page input[type="submit"]:hover,
-body.registration-page input[type="submit"]:hover {
-    background: #4353b3;
+input[type="submit"]:hover,
+button[type="submit"]:hover,
+.btn-submit:hover,
+.btn-login:hover,
+.btn-register:hover {
+    background-color: #5563DE !important;
 }
 
-/* Links */
-body.login-page .text-center,
-body.registration-page .text-center {
+/* Reset & Verify Buttons */
+.reset-page button,
+.verify-page button {
+    background: #007bff;
+}
+
+.reset-page button:hover,
+.verify-page button:hover {
+    background: #007bff; 
+}
+
+.text-center {
     text-align: center;
     margin-top: 10px;
     font-size: 14px;
 }
 
-body.login-page .text-center a,
-body.registration-page .text-center a {
+.text-center a,
+.reset-page a,
+.verify-page a {
     color: #5563DE;
     text-decoration: none;
 }
 
-body.login-page .text-center a:hover,
-body.registration-page .text-center a:hover {
+.text-center a:hover,
+.reset-page a:hover,
+.verify-page a:hover {
     text-decoration: underline;
 }
 
-/* Success & Error messages for auth pages */
-body.login-page .error,
-body.registration-page .error,
-body.login-page .success,
-body.registration-page .success {
-    max-width: 400px;
-    margin: 15px auto;
-    padding: 10px 15px;
-    border-radius: 6px;
-    font-size: 14px;
-    text-align: center;
-    font-weight: 500;
-    box-sizing: border-box;
-    line-height: 1.4;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-body.login-page .error,
-body.registration-page .error {
-    background-color: #ffe6e6;
-    color: #c0392b;
-    border: 1px solid #f5c6c6;
-}
-
-body.login-page .success,
-body.registration-page .success {
-    background-color: #e6ffe6;
-    color: #27ae60;
-    border: 1px solid #b2e6b2;
-}
-
-/*Password Reset & OTP Verification Pages */
-.reset-page,
-.verify-page {
-    background: #007bff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-}
-
-.reset-page .login-container,
-.verify-page .login-container {
-    background: white;
-    padding: 30px 35px;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    width: 360px;
-    text-align: center;
-}
-
-.reset-page .login-container h2,
-.verify-page .login-container h2 {
-    margin-bottom: 25px;
-    color: #007bff;
-    font-size: 26px;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.reset-page .login-container p,
-.verify-page .login-container p {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-/* Input fields for reset/verify pages */
-.reset-page .login-container input,
-.verify-page .login-container input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    background-color: #f9f9f9;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-}
-
-.reset-page .login-container input:focus,
-.verify-page .login-container input:focus {
-    outline: none;
-    border-color: #0056b3;
-    background-color: #fff;
-}
-
-/* Buttons for reset/verify pages */
-.reset-page .login-container button,
-.verify-page .login-container button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.reset-page .login-container button:hover,
-.verify-page .login-container button:hover {
-    background: #0056b3;
-    transform: translateY(-2px);
-}
-
-.reset-page .login-container a,
-.verify-page .login-container a {
-    display: inline-block;
-    margin-top: 15px;
-    color: #007bff;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.reset-page .login-container a:hover,
-.verify-page .login-container a:hover {
-    text-decoration: underline;
-}
-
-.reset-page .login-container .back-link,
-.verify-page .login-container .back-link {
+.back-link {
     display: inline-block;
     margin-top: 15px;
     padding: 8px 15px;
@@ -829,41 +673,13 @@ body.registration-page .success {
     color: #007bff;
     border-radius: 5px;
     text-decoration: none;
-    font-size: 14px;
     transition: all 0.3s ease;
 }
 
-.reset-page .login-container .back-link:hover,
-.verify-page .login-container .back-link:hover {
+.back-link:hover {
     background: #d0d6dd;
 }
-
-.reset-page .login-container .error,
-.verify-page .login-container .error,
-.reset-page .login-container .success,
-.verify-page .login-container .success {
-    display: inline-block;
-    padding: 8px 12px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    font-size: 14px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.reset-page .login-container .error,
-.verify-page .login-container .error {
-    background: #f8d7da;
-    color: #842029;
-}
-
-.reset-page .login-container .success,
-.verify-page .login-container .success {
-    background: #d1e7dd;
-    color: #0f5132;
-}
-
-/* user dashboard */
+/* User Dashboard */
 .dashboard-wrapper {
     background: #f5f7ff;
     min-height: 100vh;
@@ -880,17 +696,12 @@ body.registration-page .success {
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
-.dashboard-inner {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
 .dashboard-header-inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    margin-bottom: 25px;
 }
 
 .dashboard-header-inner h1 {
@@ -899,6 +710,8 @@ body.registration-page .success {
     margin: 0;
 }
 
+/* Buttons */
+.btn,
 .dashboard-header-inner .btn {
     padding: 10px 18px;
     background: linear-gradient(90deg, #6c63ff, #8250ff);
@@ -908,13 +721,17 @@ body.registration-page .success {
     font-weight: 500;
     transition: 0.3s;
     box-shadow: 0 3px 8px rgba(108, 99, 255, 0.3);
+    display: inline-block;
+    border: none;
+    cursor: pointer;
 }
 
+.btn:hover,
 .dashboard-header-inner .btn:hover {
     transform: scale(1.05);
 }
 
-/* Filter buttons */
+/* Filter Buttons */
 .filter-buttons {
     display: flex;
     justify-content: center;
@@ -941,13 +758,12 @@ body.registration-page .success {
     transform: scale(1.05);
 }
 
-/* Complaints table/grid */
+/* Complaint Cards Grid */
 .complaints-table {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
     margin-top: 20px;
-    align-items: stretch;
 }
 
 .complaint-card {
@@ -967,12 +783,10 @@ body.registration-page .success {
 
 .complaint-card.pending {
     background: #fff6dc;
-    color: #333;
 }
 
 .complaint-card.resolved {
     background: #e8ffea;
-    color: #333;
 }
 
 .complaint-header {
@@ -986,7 +800,6 @@ body.registration-page .success {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    text-decoration: none;
     color: #333;
 }
 
@@ -1000,7 +813,7 @@ body.registration-page .success {
     font-size: 20px;
 }
 
-/* Status badges */
+/* Status Badges */
 .status {
     display: inline-flex;
     align-items: center;
@@ -1019,7 +832,6 @@ body.registration-page .success {
 
 .status.pending::before {
     content: "⏳";
-    font-size: 18px;
 }
 
 .status.resolved {
@@ -1028,11 +840,17 @@ body.registration-page .success {
 
 .status.resolved::before {
     content: "✅";
-    font-size: 18px;
 }
 
 .status.total {
     background: #5563DE;
+}
+
+.complaint-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 12px;
 }
 
 .complaint-footer {
@@ -1042,7 +860,8 @@ body.registration-page .success {
     font-size: 14px;
 }
 
-.complaint-footer .created-line {
+.complaint-footer .created-line,
+.date-line {
     color: #555;
     font-size: 13px;
 }
@@ -1065,13 +884,6 @@ body.registration-page .success {
     background: #005ed1;
 }
 
-.complaint-text {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #333;
-    margin-bottom: 12px;
-}
-
 .no-complaints {
     width: 100%;
     text-align: center;
@@ -1084,200 +896,72 @@ body.registration-page .success {
     min-height: 200px;
     gap: 10px;
 }
-/* --- View Complaint Page --- */
-.complaint-view {
-    max-width: 700px;
-    margin: 50px auto;
-    background: #ffffff;
-    padding: 30px 25px;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    font-family: 'Poppins', sans-serif;
+/* /* notifications */
+.notifications-page {
+    max-width: 600px;
+    margin: 120px auto 0 auto; /* top space stays, bottom removed */
+    padding: 0 20px;
+    min-height: calc(100vh - 120px - 60px); /* ensures footer at bottom if content is short */
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
 
-.complaint-view h2 {
-    color: #333;
-    font-size: 26px;
-    font-weight: 600;
+.notifications-page h2 {
     text-align: center;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #5563DE;
-    padding-bottom: 10px;
+    margin-bottom: 30px;
 }
 
-.complaint-view p {
-    font-size: 16px;
-    margin: 8px 0;
-    line-height: 1.6;
-    color: #555;
-}
-
-.complaint-view strong {
-    color: #5563DE;
-}
-
-.date-line {
-    font-size: 14px;
-    color: #888;
-}
-
-.btn-center {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.btn-back {
-    padding: 12px 20px;
-    background: #5563DE;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 500;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.btn-back:hover {
-    background: #4353b3;
-    transform: translateY(-2px);
-}
-
-/* --- Submit Complaint Page --- */
-body.submit-page {
-    background: #f4f6ff;
-    font-family: "Poppins", sans-serif;
-    margin: 0;
+.notifications-page ul {
+    list-style: none;
     padding: 0;
+    flex-grow: 1; /* lets ul take remaining vertical space */
 }
 
-.submit-page-content {
+.notifications-page li {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding: 80px 20px;
-    min-height: calc(100vh - 140px);
 }
 
-.submit-container {
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.submit-container:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.submit-container h2 {
-    color: #1e1e2f;
-    font-size: 26px;
+.notification-content {
     text-align: center;
-    margin-bottom: 25px;
-    font-weight: 600;
-    border: none;
-    padding-bottom: 0;
 }
 
-.submit-container label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
+.notifications-page li.unread {
+    font-weight: bold;
+    background-color: #f0f8ff;
 }
 
-/* Input fields for submit complaint */
-input[type="text"],
-textarea {
-    width: 100%;
-    padding: 14px 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 15px;
-    background: #fafafa;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 15px;
+.notifications-page li.read {
+    color: #666;
 }
 
-input[type="text"] {
-    height: 50px;
-}
-
-textarea {
-    resize: vertical;
-    min-height: 150px;
-}
-
-input[type="text"]:focus,
-textarea:focus {
-    border-color: #5563DE;
-    outline: none;
-    background: #fff;
-    box-shadow: 0 0 5px rgba(85, 99, 222, 0.2);
-}
-
-.btn-submit {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(90deg, #5563DE, #6a74e8);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 17px;
+.notifications-page button {
+    margin-top: 8px;
+    padding: 4px 8px;
+    font-size: 12px;
     cursor: pointer;
-    font-weight: 600;
-    box-shadow: 0 4px 10px rgba(85, 99, 222, 0.3);
-    transition: all 0.3s ease;
-    margin-top: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: #5563DE;
+    color: white;
 }
 
-.btn-submit:hover {
-    background: linear-gradient(90deg, #4554c2, #5f68db);
-    transform: scale(1.02);
-}
-
-/* Success/Error messages for submit complaint */
-.submit-container .success-msg,
-.submit-container .error-msg {
-    display: block;
-    padding: 16px 20px;
-    margin-bottom: 15px;
-    border-radius: 12px;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
+.no-notifications {
     text-align: center;
-    font-weight: 500;
-    opacity: 1;
-    transition: opacity 1s ease-out, transform 0.4s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-style: italic;
 }
 
-.submit-container .success-msg {
-    background: #d1e7dd;
-    color: #0f5132;
-    border: 1px solid #0f5132;
-}
 
-.submit-container .error-msg {
-    background: #f8d7da;
-    color: #842029;
-    border: 1px solid #842029;
-}
-/* --- Main Admin Dashboard --- */
+ /* admin dashboard */
 .admin-dashboard {
     background: #f5f7fa;
     max-width: 1000px;
-    margin: 40px auto;
+    margin: 120px auto 40px auto; 
     border-radius: 16px;
     padding: 40px 30px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
@@ -1291,22 +975,9 @@ textarea:focus {
     font-size: 32px;
     font-weight: 600;
     border-bottom: none !important;
-    text-decoration: none !important;
-    display: block;
-    width: 100%;
 }
 
-.success-message {
-    text-align: center;
-    background: #d4edda;
-    color: #155724;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    font-weight: 500;
-}
-
-/* Admin dashboard cards */
+/* Admin Cards */
 .admin-dashboard .cards {
     display: flex;
     flex-wrap: wrap;
@@ -1323,8 +994,6 @@ textarea:focus {
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
 
 .admin-dashboard .card h2 {
@@ -1332,7 +1001,6 @@ textarea:focus {
     margin-bottom: 10px;
     font-weight: 700;
     border-bottom: none;
-    text-decoration: none;
 }
 
 .admin-dashboard .card p {
@@ -1364,7 +1032,7 @@ textarea:focus {
     opacity: 0.9;
 }
 
-/* Admin dashboard buttons */
+/* Admin Buttons */
 .admin-dashboard .dashboard-buttons {
     text-align: center;
 }
@@ -1389,22 +1057,22 @@ textarea:focus {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.admin-dashboard .logout-btn {
-    background: #dc3545;
+.logout-btn {
+    background: #dc3545 !important;
 }
 
-.admin-dashboard .logout-btn:hover {
-    background: #b52a36;
+.logout-btn:hover {
+    background: #b52a36 !important;
 }
 
-/* --- Admin View Complaints --- */
+
+/* Admin View Complaints */
 .admin-dashboard .view-complaints {
     background: #f0f2f7;
     max-width: 1200px;
     margin: 40px auto;
     border-radius: 16px;
     padding: 40px 30px;
-    font-family: 'Poppins', sans-serif;
 }
 
 .admin-dashboard .view-complaints h2 {
@@ -1428,30 +1096,12 @@ textarea:focus {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: all 0.3s ease;
-}
-
-.admin-dashboard .view-complaints .card:hover {
-    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
-    transform: translateY(-5px);
-}
-
-.card.pending {
-    background-color: #f0ad4e;
-    color: #fff;
-}
-
-.card.resolved {
-    background-color: #28a745;
-    color: #fff;
 }
 
 .card.pending h3,
 .card.pending p,
-.card.pending .complaint-text,
 .card.resolved h3,
-.card.resolved p,
-.card.resolved .complaint-text {
+.card.resolved p {
     color: #fff;
 }
 
@@ -1473,7 +1123,6 @@ textarea:focus {
 .header-top h3 {
     font-size: 20px;
     margin: 0;
-    text-decoration: none;
 }
 
 .status-block {
@@ -1503,10 +1152,6 @@ textarea:focus {
     font-size: 15px;
 }
 
-.complaint-text .complaint-icon {
-    display: none;
-}
-
 .card-footer {
     margin-top: auto;
     padding-top: 15px;
@@ -1532,10 +1177,104 @@ textarea:focus {
     box-shadow: 0 6px 15px rgba(0,123,255,0.4);
 }
 
-/* --- Update Status Page --- */
+/* View Complaint Page */
+.complaint-view {
+    max-width: 700px;
+    margin: 100px auto 50px;
+    background: #ffffff;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    font-family: 'Poppins', sans-serif;
+}
+
+.complaint-view h2 {
+    color: #333;
+    font-size: 26px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #5563DE;
+    padding-bottom: 10px;
+}
+
+.complaint-view p {
+    font-size: 16px;
+    margin: 8px 0;
+    line-height: 1.6;
+    color: #555;
+}
+
+.complaint-view strong {
+    color: #5563DE;
+}
+
+.btn-center {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-back {
+    padding: 12px 20px;
+    background: #5563DE;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background: #4353b3;
+    transform: translateY(-2px);
+}
+
+body.submit-page {
+    background: #f4f6ff;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.submit-page-content-wrapper {
+    flex: 1; 
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    padding: 20px;           
+    box-sizing: border-box;
+}
+
+.submit-page-content {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+}
+
+.submit-page-content h2 {
+    color: #1e1e2f;
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.submit-page-content form {
+    width: 100%;
+}
+/* Update Status Page */
 .update-status-container {
     max-width: 500px;
-    margin: 60px auto;
+    margin: 140px auto 60px;
     padding: 40px 30px;
     background: #fff;
     border-radius: 12px;
@@ -1557,104 +1296,29 @@ textarea:focus {
     margin-bottom: 30px;
     border-bottom: none;
 }
-
-.update-status-container .message {
-    background: #d4edda;
-    color: #155724;
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 500;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+ /* Profile Page */
+body.profile-page {
+    padding-top: 80px; 
 }
 
-.update-status-container .error-message {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 500;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.update-status-container form {
-    margin-top: 20px;
-}
-
-.update-status-container label {
-    display: block;
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.update-status-container select {
-    width: 100%;
-    padding: 12px 40px 12px 15px;
-    font-size: 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    background: #f9f9f9;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Poppins', sans-serif;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4L6 8L10 4' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 12px 12px;
-}
-
-.update-status-container select:focus {
-    outline: none;
-    border-color: #007bff;
-    background: #fff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-}
-
-.update-status-container input[type="submit"] {
-    width: 100%;
-    padding: 12px 20px;
-    margin-top: 20px;
-    background: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-}
-
-.update-status-container input[type="submit"]:hover {
-    background: #218838;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
-}
-/* profile pages */
 body.profile-page .container {
     max-width: 600px;
-    margin: 50px auto;
+    margin: 20px auto 50px auto;
     padding: 25px 30px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     text-align: center;
+    overflow: hidden; 
 }
+
 
 body.profile-page .container h2 {
     margin-bottom: 25px;
     color: #333;
 }
 
+/* Profile Image */
 body.profile-page .container .profile-img {
     width: 120px;
     height: 120px;
@@ -1666,11 +1330,13 @@ body.profile-page .container .profile-img {
     margin-right: auto;
 }
 
+/* Paragraphs */
 body.profile-page .container p {
     font-size: 16px;
     margin: 8px 0;
 }
 
+/* Form fields */
 body.profile-page .container label {
     display: block;
     margin-bottom: 5px;
@@ -1708,6 +1374,7 @@ body.profile-page .container input[type="file"] {
     padding: 6px 12px;
 }
 
+/* Buttons */
 body.profile-page .container .btn,
 body.profile-page .container button {
     display: inline-block;
@@ -1728,6 +1395,17 @@ body.profile-page .container button:hover {
     background-color: #3b4db2;
 }
 
+/* Links */
+body.profile-page .container a {
+    color: #5563de;
+    text-decoration: none;
+}
+
+body.profile-page .container a:hover {
+    text-decoration: underline;
+}
+
+/* Messages */
 body.profile-page .message,
 body.profile-page .success,
 body.profile-page .error {
@@ -1754,16 +1432,7 @@ body.profile-page .error {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
-
-body.profile-page .container a {
-    color: #5563de;
-    text-decoration: none;
-}
-
-body.profile-page .container a:hover {
-    text-decoration: underline;
-}
-/* footer */
+ /* footer */
 footer {
     background: linear-gradient(135deg, #007BFF, #0056b3);
     color: white;
@@ -1839,44 +1508,152 @@ footer .footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.3);
     padding-top: 10px;
 }
-/* responsive */
+
+/* /* responsiveness */
 @media (max-width: 768px) {
-   header .navbar {
+    /* Header & Navigation */
+    .navbar {
         flex-direction: column;
-    }
-    footer .footer-container {
-        flex-direction: column;
-        text-align: center;
-    }
-    .features div {
-        width: 100%;
-        margin-bottom: 20px;
+        padding: 15px 20px;
     }
     
+    .nav-links {
+        margin-top: 10px;
+    }
+    
+    .nav-links a {
+        margin: 5px 10px;
+    }
+    
+    /* Reduce top margin for mobile */
+    main, section, .content,
+    .update-status-container,
+    .submit-container,
+    .profile-container,
+    .container {
+        margin-top: 120px;
+    }
+    
+    /* Home Banner */
+    .home-banner h1 {
+        font-size: 28px;
+    }
+    
+    /* Section Cards */
     .features .container,
     .facilities-base,
-    .timeline {
+    .timeline,
+    .why-choose-vision .container {
         flex-direction: column;
         align-items: center;
     }
-       
+    
+    .feature-box,
+    .facility-box,
+    .timeline-step,
+    .why-choose-vision .box {
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    /* Contact Section */
     .contact-container {
         flex-direction: column;
         align-items: center;
     }
     
-   
+    /* Complaint View */
+    .complaint-view {
+        margin: 120px 15px 50px;
+        padding: 20px 15px;
+    }
+    
+    .complaint-view h2 {
+        font-size: 22px;
+    }
+    
+    .complaint-view p {
+        font-size: 15px;
+    }
+    
+    /* Admin Dashboard Cards */
     .admin-dashboard .cards {
         flex-direction: column;
+        align-items: center;
+        gap: 20px;
     }
     
     .admin-dashboard .card {
+        flex: none;
         width: 100%;
+        max-width: 400px;
+        margin-bottom: 20px;
     }
     
+    /* Admin View Complaints */
+    .admin-dashboard .view-complaints .cards {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
     
+    .admin-dashboard .view-complaints .card {
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    /* Update Status Container */
     .update-status-container {
-        margin: 30px 20px;
+        margin: 120px 20px 40px;
         padding: 30px 20px;
+    }
+    
+    /* User Dashboard */
+    .dashboard-header-inner {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .dashboard-header-inner h1 {
+        font-size: 20px;
+    }
+    
+    .complaints-table {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Footer */
+    footer .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Tablet & Small Desktop */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .navbar {
+        padding: 15px 30px;
+    }
+    
+    .complaints-table {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .admin-dashboard .view-complaints .cards {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+/* Large Screens */
+@media (min-width: 1440px) {
+    .dashboard-container,
+    .admin-dashboard {
+        max-width: 1400px;
+    }
+    
+    .complaints-table {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     }
 }

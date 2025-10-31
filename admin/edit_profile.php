@@ -69,40 +69,40 @@ include __DIR__ . '/../includes/header.php';
 ?>
 
 <body class="profile-page">
-    <div class="container">
-        <h2>Edit Admin Profile</h2>
+    <main class="profile-main">
+        <div class="container">
+            <h2>Edit Admin Profile</h2>
 
-        <?php if ($profile_msg): ?>
-            <p id="profileMessage" class="<?php echo $profile_msg_type; ?>"><?php echo $profile_msg; ?></p>
-        <?php endif; ?>
+            <?php if ($profile_msg): ?>
+                <p id="profileMessage" class="<?php echo $profile_msg_type; ?>"><?php echo $profile_msg; ?></p>
+            <?php endif; ?>
 
-        <form method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($admin['username']); ?>" required>
-            </div>
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($admin['username']); ?>" required>
+                </div>
 
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($admin['email']); ?>" required>
-            </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($admin['email']); ?>" required>
+                </div>
 
-            <div class="form-group">
-                <label for="profile_image">Profile Image:</label>
-                <?php if ($admin['image']): ?>
-                    <div style="margin-bottom:10px;">
-                        <img src="/complaint_management/Image/<?php echo htmlspecialchars($admin['image']); ?>"
-                            alt="Current Profile Image" class="profile-img">
-                    </div>
-                <?php endif; ?>
-                <input type="file" id="profile_image" name="profile_image" accept="image/*">
-            </div>
+                <div class="form-group">
+                    <label for="profile_image">Profile Image:</label>
+                    <?php if ($admin['image']): ?>
+                        <div style="margin-bottom:10px;">
+                            <img src="/complaint_management/Image/<?php echo htmlspecialchars($admin['image']); ?>"
+                                alt="Current Profile Image" class="profile-img">
+                        </div>
+                    <?php endif; ?>
+                    <input type="file" id="profile_image" name="profile_image" accept="image/*">
+                </div>
 
-            <button type="submit" name="update_profile">Update Profile</button>
-        </form>
-    </div>
-
-   
+                <button type="submit" name="update_profile">Update Profile</button>
+            </form>
+        </div>
+    </main>
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

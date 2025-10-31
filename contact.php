@@ -80,6 +80,6 @@ if (isset($_POST['send_message'])) {
         </div>
     </div>
 </section>
-<script src="Js/script.js"></script>
+
 
 <?php include "includes/footer.php"; ?>

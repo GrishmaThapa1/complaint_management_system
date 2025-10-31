@@ -40,15 +40,34 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $complaints = $stmt->get_result();
+
+// Fetch unread notification count
+$count_sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND status = 'unread'";
+$count_stmt = $conn->prepare($count_sql);
+$count_stmt->bind_param("i", $user_id);
+$count_stmt->execute();
+$count_result = $count_stmt->get_result();
+$count_row = $count_result->fetch_row();
+$unread_count = $count_row[0];
 ?>
 
 <div class="dashboard-wrapper">
     <div class="dashboard-container">
         <div class="dashboard-inner">
             <!-- Header -->
-            <div class="dashboard-header-inner">
+            <div class="dashboard-header-inner" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h1>Welcome, <?= htmlspecialchars($_SESSION['user_name']) ?></h1>
-                <a href="submit_complaint.php" class="btn">Submit Complaint</a>
+
+                <!-- Bell Icon linking to notifications page -->
+                <a href="notifications.php" class="bell-icon" style="position: relative; display: inline-block;">
+                    <i class="fas fa-bell" style="font-size: 24px; color: #555;"></i>
+                    <?php if ($unread_count > 0): ?>
+                        <span class="badge" style="position: absolute; top: -5px; right: -10px; background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px;"><?= $unread_count ?></span>
+                    <?php endif; ?>
+                </a>
+
+                <!-- Submit Complaint button -->
+                <a href="submit_complaint.php" class="btn" style="float: right;">Submit Complaint</a>
             </div>
 
             <!-- Filter Buttons -->
@@ -58,7 +77,7 @@ $complaints = $stmt->get_result();
                 <a href="?status=resolved" class="filter-btn <?= $status_filter === 'resolved' ? 'active' : '' ?>">Resolved</a>
             </div>
 
-            <!-- Search Form (dropdown removed) -->
+            <!-- Search Form -->
             <form method="GET" style="display:flex; justify-content:center; gap:10px; margin-bottom:25px; flex-wrap:wrap;">
                 <input type="text" name="search" placeholder="Search by Subject or Complaint..." value="<?= htmlspecialchars($search) ?>" style="padding:8px 12px; border-radius:6px; border:1px solid #ccc;">
                 <button type="submit" style="padding:8px 16px; background:#5563DE; color:white; border:none; border-radius:6px; cursor:pointer;">Search</button>

@@ -34,8 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <body class="submit-page">
-    <main class="submit-page-content">
-        <div class="submit-container">
+
+    <div class="submit-page-content-wrapper">
+        <div class="submit-page-content">
             <h2>Submit Complaint</h2>
 
             <?php if (!empty($error)): ?>
@@ -58,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="submit" value="Submit Complaint" class="btn-submit">
             </form>
         </div>
-    </main>
+    </div>
 
     <script>
         // Auto fade out messages

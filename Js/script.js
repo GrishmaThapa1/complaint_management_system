@@ -48,13 +48,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* ===== 5️⃣ Password toggle (FIXED) ===== */
+  /* ===== 5️⃣ Password toggle ===== */
   document.querySelectorAll(".password-toggle").forEach((icon) => {
     icon.addEventListener("click", function (e) {
       e.stopPropagation();
       const wrapper = this.parentElement;
       const input = wrapper.querySelector("input");
-
       if (input) {
         input.type = input.type === "password" ? "text" : "password";
         this.classList.toggle("fa-eye-slash");
@@ -127,4 +126,52 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  /* ===== 🔟 Mark notifications as read ===== */
+  const notificationsPage = document.querySelector(".notifications-page");
+  if (notificationsPage) {
+    notificationsPage.addEventListener("click", (e) => {
+      if (e.target.classList.contains("mark-read-btn")) {
+        const notificationId = e.target.dataset.id;
+
+        if (!notificationId) {
+          console.error("No notification ID found on button!");
+          return;
+        }
+
+        console.log("Sending fetch for notification ID:", notificationId);
+
+        fetch("mark_notifications.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: "id=" + encodeURIComponent(notificationId),
+        })
+          .then((response) => response.text())
+          .then((result) => {
+            console.log("Mark read response:", result);
+
+            if (result.trim() === "success") {
+              const li = document.querySelector(
+                `li[data-id="${notificationId}"]`
+              );
+              if (li) {
+                li.classList.remove("unread");
+                li.classList.add("read");
+                e.target.remove();
+              }
+
+              const badge = document.querySelector(".bell-icon .badge");
+              if (badge) {
+                let count = parseInt(badge.textContent) - 1;
+                if (count > 0) badge.textContent = count;
+                else badge.remove();
+              }
+            } else {
+              alert("Failed to mark notification as read.");
+            }
+          })
+          .catch((err) => console.error("Fetch error:", err));
+      }
+    });
+  }
 });

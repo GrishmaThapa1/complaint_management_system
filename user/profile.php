@@ -21,20 +21,23 @@ include __DIR__ . '/../includes/header.php';
 ?>
 
 <body class="profile-page">
-    <div class="container">
-        <h2>Your Profile</h2>
+    <main class="profile-main">
+        <div class="container">
+            <h2>Your Profile</h2>
 
-        <div style="margin-bottom:20px;">
-            <img src="/complaint_management/Image/<?php echo $user['image'] ?: 'default.png'; ?>"
-                alt="Profile Image" class="profile-img">
+            <div style="margin-bottom:20px;">
+                <img src="/complaint_management/Image/<?php echo $user['image'] ?: 'default.png'; ?>"
+                    alt="Profile Image" class="profile-img">
+            </div>
+
+            <p><strong>Name:</strong> <?php echo htmlspecialchars($user['name']); ?></p>
+            <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+
+            <a href="edit_profile.php" class="btn">Edit Profile</a>
         </div>
+    </main>
 
-        <p><strong>Name:</strong> <?php echo htmlspecialchars($user['name']); ?></p>
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-
-        <a href="edit_profile.php" class="btn">Edit Profile</a>
-    </div>
-
-   
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
+
+</html>

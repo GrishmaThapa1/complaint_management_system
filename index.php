@@ -14,10 +14,10 @@ include "includes/header.php";
 </section>
 
 <main>
-    <!-- features -->
+    <!-- FEATURES -->
     <section class="features full-width-section">
+        <h2>Features</h2> <!-- ✅ moved outside .container -->
         <div class="container">
-            <h2>Features</h2>
             <div class="facilities-base">
                 <div class="feature-box facility-box">
                     <div class="facility-icon"><i class="fas fa-plus-square"></i></div>
@@ -37,7 +37,6 @@ include "includes/header.php";
             </div>
         </div>
     </section>
-
 
     <!-- FACILITIES -->
     <section id="facilities" class="section-facilities full-width-section">

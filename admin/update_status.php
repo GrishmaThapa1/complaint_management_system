@@ -15,11 +15,11 @@ if (!isset($_GET['id'])) {
 
 $complaint_id = intval($_GET['id']);
 
-// Fetch complaint status
-$stmt = $conn->prepare("SELECT status FROM complaints WHERE id=?");
+// Fetch complaint details
+$stmt = $conn->prepare("SELECT user_id, status FROM complaints WHERE id=?");
 $stmt->bind_param("i", $complaint_id);
 $stmt->execute();
-$stmt->bind_result($status);
+$stmt->bind_result($user_id, $status);
 $stmt->fetch();
 $stmt->close();
 
@@ -31,11 +31,19 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (empty($new_status)) {
         $error_message = "Please select a status first!";
     } else {
+        // Update complaint status
         $stmt = $conn->prepare("UPDATE complaints SET status=? WHERE id=?");
         $stmt->bind_param("si", $new_status, $complaint_id);
         if ($stmt->execute()) {
             $_SESSION['success_message'] = "Status updated successfully";
-            // ✅ REMOVED redirect - let JS handle it
+
+            // Create notification for the user
+            $notification_message = "Your complaint status has been updated to: $new_status";
+            $stmt = $conn->prepare("INSERT INTO notifications (user_id, message, status) VALUES (?, ?, 'unread')");
+            $stmt->bind_param("is", $user_id, $notification_message);
+            $stmt->execute();
+
+            // ✅ No need for redirect now, success message will appear
         } else {
             $error_message = "Error updating status: " . $conn->error;
         }
@@ -68,7 +76,5 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         <input type="submit" value="Update Status">
     </form>
 </div>
-
-
 
 <?php include "../includes/footer.php"; ?>

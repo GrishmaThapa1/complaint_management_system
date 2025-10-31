@@ -21,24 +21,23 @@ include __DIR__ . '/../includes/header.php';
 ?>
 
 <body class="profile-page">
-    <div class="container">
-        <h2>Admin Profile</h2>
+    <main class="profile-main">
+        <div class="container">
+            <h2>Admin Profile</h2>
 
-        <?php if ($admin['image'] && file_exists(__DIR__ . '/../Image/' . $admin['image'])): ?>
-            <div style="text-align:center; margin-bottom:15px;">
-                <img src="/complaint_management/Image/<?php echo htmlspecialchars($admin['image']); ?>"
-                    alt="Profile Image" style="height:100px; border-radius:50%;">
-            </div>
-        <?php endif; ?>
+            <?php if ($admin['image'] && file_exists(__DIR__ . '/../Image/' . $admin['image'])): ?>
+                <div style="text-align:center; margin-bottom:15px;">
+                    <img src="/complaint_management/Image/<?php echo htmlspecialchars($admin['image']); ?>"
+                        alt="Profile Image" style="height:100px; border-radius:50%;">
+                </div>
+            <?php endif; ?>
 
-        <p><strong>Username:</strong> <?php echo htmlspecialchars($admin['username']); ?></p>
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($admin['email']); ?></p>
-        
+            <p><strong>Username:</strong> <?php echo htmlspecialchars($admin['username']); ?></p>
+            <p><strong>Email:</strong> <?php echo htmlspecialchars($admin['email']); ?></p>
 
-        <a href="edit_profile.php" class="btn">Edit Profile</a>
-    </div>
-
-   
+            <a href="edit_profile.php" class="btn">Edit Profile</a>
+        </div>
+    </main>
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

@@ -22,6 +22,14 @@ include "includes/header.php";
     </div>
 </section>
 
+<!-- BRIDGE QUOTE / HEADING SECTION -->
+<section class="section-quote">
+    <div class="container">
+        <h2>Empowering Communities</h2>
+        <p>"Transparency and efficiency at the heart of every complaint we handle."</p>
+    </div>
+</section>
+
 <!-- WHY CHOOSE US & VISION SECTION -->
 <section class="why-choose-vision">
     <div class="container">
