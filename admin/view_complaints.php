@@ -14,10 +14,10 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 $date = isset($_GET['date']) ? $_GET['date'] : ''; // single date
 
 // Build SQL with filters
-$sql = "SELECT complaints.id, users.name, complaints.complaint_text, complaints.status, complaints.created_at
+$sql = "SELECT complaints.id, users.username, complaints.complaint_text, complaints.status, complaints.created_at
         FROM complaints
         JOIN users ON complaints.user_id = users.id
-        WHERE (complaints.id LIKE ? OR users.name LIKE ? OR complaints.complaint_text LIKE ?)";
+        WHERE (complaints.id LIKE ? OR users.username LIKE ? OR complaints.complaint_text LIKE ?)";
 
 $params = ["%%", "%%", "%%"]; // default
 
@@ -52,7 +52,7 @@ $result = $stmt->get_result();
 
     <!-- Search / Filter Form -->
     <form method="GET" class="search-filter-form" style="margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center;">
-        <input type="text" name="search" placeholder="Search by ID, Name, Complaint..." value="<?= htmlspecialchars($search) ?>" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc;">
+        <input type="text" name="search" placeholder="Search by ID, Username, Complaint..." value="<?= htmlspecialchars($search) ?>" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc;">
         <select name="status" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc;">
             <option value="">All Status</option>
             <option value="Pending" <?= strtolower($status) === 'pending' ? 'selected' : '' ?>>Pending</option>
@@ -81,7 +81,7 @@ $result = $stmt->get_result();
                                 </div>
                             </div>
                             <div class="header-bottom" style="display:flex; justify-content:space-between; font-size:14px; margin-top:5px;">
-                                <p><i class="fas fa-user"></i> <?= htmlspecialchars($row['name']) ?></p>
+                                <p><i class="fas fa-user"></i> <?= htmlspecialchars($row['username']) ?></p>
                                 <p><i class="fas fa-calendar-alt"></i> <?= date("d M Y", strtotime($row['created_at'])) ?></p>
                             </div>
                         </div>

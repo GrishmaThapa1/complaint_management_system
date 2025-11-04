@@ -24,8 +24,17 @@ $profile_msg_type = "";
 if (isset($_POST['update_profile'])) {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
-    $newImageName = $admin['image'];
+    $newImageName = $admin['image']; // default current image
 
+    // Handle image removal
+    if (isset($_POST['remove_image']) && $_POST['remove_image'] == 1) {
+        if ($admin['image'] && file_exists(__DIR__ . '/../Image/' . $admin['image'])) {
+            unlink(__DIR__ . '/../Image/' . $admin['image']); // delete file
+        }
+        $newImageName = ''; // clear database field
+    }
+
+    // Handle image upload
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['name'] !== "") {
         $imgName = $_FILES['profile_image']['name'];
         $imgTmp = $_FILES['profile_image']['tmp_name'];
@@ -41,6 +50,7 @@ if (isset($_POST['update_profile'])) {
         }
     }
 
+    // Check if at least one field changed
     if ($username === $admin['username'] && $email === $admin['email'] && $newImageName === $admin['image']) {
         if (!$profile_msg) {
             $profile_msg = "Please make changes before updating your profile.";
@@ -90,12 +100,20 @@ include __DIR__ . '/../includes/header.php';
 
                 <div class="form-group">
                     <label for="profile_image">Profile Image:</label>
-                    <?php if ($admin['image']): ?>
-                        <div style="margin-bottom:10px;">
+
+                    <?php if ($admin['image'] && file_exists(__DIR__ . '/../Image/' . $admin['image'])): ?>
+                        <div style="margin-bottom:10px; text-align:center;">
                             <img src="/complaint_management/Image/<?php echo htmlspecialchars($admin['image']); ?>"
-                                alt="Current Profile Image" class="profile-img">
+                                alt="Current Profile Image" class="profile-img" style="height:100px; border-radius:50%;">
+                        </div>
+                        <div style="margin-bottom:10px; text-align:center;">
+                            <label style="display:inline-flex; align-items:center; gap:5px;">
+                                <input type="checkbox" id="remove_image" name="remove_image" value="1">
+                                Remove Profile Image
+                            </label>
                         </div>
                     <?php endif; ?>
+
                     <input type="file" id="profile_image" name="profile_image" accept="image/*">
                 </div>
 

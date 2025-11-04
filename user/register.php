@@ -1,3 +1,43 @@
+<?php
+session_start();
+include "../includes/db.php"; // Correct path from user/register.php
+
+$error = "";
+$success = "";
+$username = "";
+$email = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    // Check passwords match
+    if ($password !== $confirm_password) {
+        $error = "Passwords do not match!";
+    } else {
+        // Hash password
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+        // Insert into database
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $username, $email, $hashed_password);
+
+        if ($stmt->execute()) {
+            $success = "Registration successful! You can now <a href='../login.php'>login</a>.";
+            $username = $email = ""; // clear form
+        } else {
+            if (strpos($stmt->error, "Duplicate entry") !== false) {
+                $error = "This email or username is already registered.";
+            } else {
+                $error = "Error: " . $stmt->error;
+            }
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,13 +57,13 @@
 
         <form method="post" id="registerForm" autocomplete="off">
             <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your full name" value="<?= htmlspecialchars($name ?? '') ?>" required>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" value="<?= htmlspecialchars($username) ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" value="<?= htmlspecialchars($email ?? '') ?>" required>
+                <input type="email" id="email" name="email" placeholder="Enter your email" value="<?= htmlspecialchars($email) ?>" required>
             </div>
 
             <div class="form-group">

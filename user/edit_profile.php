@@ -22,9 +22,17 @@ $profile_msg_type = "";
 
 // Handle profile update
 if (isset($_POST['update_profile'])) {
-    $name = trim($_POST['name']);
+    $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $newImageName = $user['image']; // default current image
+
+    // Handle image removal
+    if (isset($_POST['remove_image']) && $_POST['remove_image'] == 1) {
+        if ($user['image'] && file_exists(__DIR__ . '/../Image/' . $user['image'])) {
+            unlink(__DIR__ . '/../Image/' . $user['image']); // delete file
+        }
+        $newImageName = ''; // clear database field
+    }
 
     // Handle image upload
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['name'] !== "") {
@@ -43,14 +51,14 @@ if (isset($_POST['update_profile'])) {
     }
 
     // Check if at least one field changed
-    if ($name === $user['name'] && $email === $user['email'] && $newImageName === $user['image']) {
+    if ($username === $user['username'] && $email === $user['email'] && $newImageName === $user['image']) {
         if (!$profile_msg) {
             $profile_msg = "Please make changes before updating your profile.";
             $profile_msg_type = "error";
         }
     } else if (!$profile_msg) {
-        $stmt = $conn->prepare("UPDATE users SET name=?, email=?, image=? WHERE id=?");
-        $stmt->bind_param("sssi", $name, $email, $newImageName, $user_id);
+        $stmt = $conn->prepare("UPDATE users SET username=?, email=?, image=? WHERE id=?");
+        $stmt->bind_param("sssi", $username, $email, $newImageName, $user_id);
         if ($stmt->execute()) {
             $profile_msg = "Profile updated successfully.";
             $profile_msg_type = "success";
@@ -81,8 +89,8 @@ include __DIR__ . '/../includes/header.php';
 
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="name">Full Name:</label>
-                    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -92,12 +100,20 @@ include __DIR__ . '/../includes/header.php';
 
                 <div class="form-group">
                     <label for="profile_image">Profile Image:</label>
-                    <?php if ($user['image']): ?>
-                        <div style="margin-bottom:10px;">
+
+                    <?php if ($user['image'] && file_exists(__DIR__ . '/../Image/' . $user['image'])): ?>
+                        <div style="margin-bottom:10px; text-align:center;">
                             <img src="/complaint_management/Image/<?php echo htmlspecialchars($user['image']); ?>"
-                                alt="Current Profile Image" class="profile-img">
+                                alt="Current Profile Image" class="profile-img" style="height:100px; border-radius:50%;">
+                        </div>
+                        <div style="margin-bottom:10px; text-align:center;">
+                            <label style="display:inline-flex; align-items:center; gap:5px;">
+                                <input type="checkbox" id="remove_image" name="remove_image" value="1">
+                                Remove Profile Image
+                            </label>
                         </div>
                     <?php endif; ?>
+
                     <input type="file" id="profile_image" name="profile_image" accept="image/*">
                 </div>
 

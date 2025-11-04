@@ -23,15 +23,18 @@ label {
     color: #842029;
     border: 1px solid #842029;
     font-size: 14px;
-    padding: 12px 15px;
+    padding: 12px 20px;
     border-radius: 6px;
-    width: 100%;          /* Full width */
-    max-width: 400px;     /* But not too wide */
+    max-width: 500px;
+    width: auto;
     text-align: center;
-    margin: 10px auto;    /* Center the block */
-    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
+    display: block !important;
+    box-sizing: border-box;
 }
-
 
 /* Success Messages */
 .success, .success-msg, .success-message, .message {
@@ -39,13 +42,17 @@ label {
     color: #155724;
     border: 1px solid #c3e6cb;
     font-size: 14px;
-    padding: 12px 15px;
+    padding: 12px 20px;
     border-radius: 6px;
-    width: 100%;          
-    max-width: 400px;     
-    text-align: center;   
-    margin: 10px auto;    
-    display: block;
+    max-width: 500px;
+    width: auto;
+    text-align: center;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
+    display: block !important;
+    box-sizing: border-box;
 }
 
 
@@ -480,6 +487,7 @@ body.registration-page,
     box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 400px;
+    box-sizing: border-box;
 }
 
 body.login-page .login-container {
@@ -501,7 +509,7 @@ body.registration-page h2,
 .reset-page h2,
 .verify-page h2 {
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-size: 28px;
     text-align: center;
 }
@@ -514,15 +522,16 @@ body.registration-page h2,
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* equal spacing between fields */
     display: flex;
     flex-direction: column;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: 500;
+    font-size: 14px;
 }
 
 body.login-page input,
@@ -538,6 +547,7 @@ body.registration-page input,
     background-color: #fff;
     color: #333;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 body.login-page input:focus,
@@ -552,6 +562,7 @@ body.registration-page input:focus,
 .password-wrapper {
     position: relative;
     width: 100%;
+    margin-bottom: 20px; /* ensures spacing same as other fields */
 }
 
 .password-wrapper input {
@@ -578,19 +589,22 @@ button[type="submit"],
 .btn-login,
 .btn-register {
     -webkit-appearance: none;
-    appearance: none;         
-    display: inline-block;
+    appearance: none;
+    display: block;
     width: 100%;
     padding: 12px;
-    background-color: #5563DE !important; 
-    color: #fff !important;               
+    margin-top: 10px;
+    background-color: #5563DE !important;
+    color: #fff !important;
     border: none !important;
     border-radius: 5px;
     font-size: 16px;
     font-weight: 500;
     text-align: center;
     cursor: pointer;
+    box-sizing: border-box;
 }
+
 
 .reset-page button,
 .verify-page button {
@@ -643,10 +657,11 @@ body.profile-page .container {
 }
 
 /* Dashboard */
+/* Dashboard */
 .dashboard-wrapper {
     background: #f5f7ff;
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: 0 20px 40px; /* ⬅ Removed top padding so it touches header */
     font-family: 'Poppins', sans-serif;
 }
 
@@ -656,8 +671,10 @@ body.profile-page .container {
     padding: 30px;
     max-width: 1200px;
     margin: 0 auto;
+    margin-top: 0; /* ⬅ Ensures no gap below header */
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
+
 
 .dashboard-header-inner {
     display: flex;

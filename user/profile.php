@@ -25,12 +25,15 @@ include __DIR__ . '/../includes/header.php';
         <div class="container">
             <h2>Your Profile</h2>
 
-            <div style="margin-bottom:20px;">
-                <img src="/complaint_management/Image/<?php echo $user['image'] ?: 'default.png'; ?>"
-                    alt="Profile Image" class="profile-img">
-            </div>
+            <!-- Only show image if it exists -->
+            <?php if ($user['image'] && file_exists(__DIR__ . '/../Image/' . $user['image'])): ?>
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="/complaint_management/Image/<?php echo htmlspecialchars($user['image']); ?>"
+                        alt="Profile Image" style="height:100px; border-radius:50%;">
+                </div>
+            <?php endif; ?>
 
-            <p><strong>Name:</strong> <?php echo htmlspecialchars($user['name']); ?></p>
+            <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
             <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
 
             <a href="edit_profile.php" class="btn">Edit Profile</a>
