@@ -51,8 +51,9 @@ $resolved_complaints = $row['resolved'];
         </div>
     </div>
 
-    <div class="dashboard-buttons">
+    <div class="dashboard-buttons" style="margin-top:20px;">
         <a href="view_complaints.php" class="btn">View Complaints</a>
+        <a href="view_feedback.php" class="btn" style="margin-left: 10px;">View Feedback</a>
     </div>
 </div>
 

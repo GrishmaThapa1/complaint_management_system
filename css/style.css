@@ -657,7 +657,6 @@ body.profile-page .container {
 }
 
 /* Dashboard */
-/* Dashboard */
 .dashboard-wrapper {
     background: #f5f7ff;
     min-height: 100vh;
@@ -1768,4 +1767,56 @@ footer .footer-bottom {
     .admin-dashboard .view-complaints {
         max-width: 1400px;
     }
+}
+/* feedback.css */
+
+/* Table container */
+.feedback-table-container {
+    overflow-x: auto; /* allows horizontal scroll if needed */
+    margin-top: 20px;
+}
+
+/* Table styles */
+.feedback-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.feedback-table th,
+.feedback-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word; /* wrap long text */
+}
+
+.feedback-table th {
+    background-color: #5563DE;
+    color: #fff;
+    position: sticky;
+    top: 0;
+}
+
+.feedback-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.feedback-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Optional: truncate very long comments with ellipsis, remove if you want full */
+.feedback-table td.comment {
+    max-width: 400px; /* adjust as needed */
+    white-space: normal;
+}
+
+/* Table heading */
+.dashboard-inner h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #333;
 }

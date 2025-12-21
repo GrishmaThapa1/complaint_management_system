@@ -23,13 +23,19 @@ $stmt->bind_result($user_id, $status);
 $stmt->fetch();
 $stmt->close();
 
+// Ensure $status is always a string
+$status = $status ?? "";
+
 // Handle POST update
 $error_message = "";
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $new_status = $_POST['status'];
+    $new_status = $_POST['status'] ?? "";
 
     if (empty($new_status)) {
         $error_message = "Please select a status first!";
+    } elseif (strtolower($status) === 'resolved') {
+        // Prevent updating if already resolved
+        $error_message = "Cannot update status. This complaint is already resolved.";
     } else {
         // Update complaint status
         $stmt = $conn->prepare("UPDATE complaints SET status=? WHERE id=?");
@@ -42,8 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $stmt = $conn->prepare("INSERT INTO notifications (user_id, message, status) VALUES (?, ?, 'unread')");
             $stmt->bind_param("is", $user_id, $notification_message);
             $stmt->execute();
-
-            // ✅ No need for redirect now, success message will appear
         } else {
             $error_message = "Error updating status: " . $conn->error;
         }
@@ -67,14 +71,18 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     <form method="POST">
         <label for="status">Update Status:</label><br>
-        <select name="status" id="status" required>
+        <select name="status" id="status" required <?php echo (strtolower($status) === 'resolved') ? 'disabled' : ''; ?>>
             <option value="" disabled <?php echo empty($status) || ($status !== "Pending" && $status !== "Resolved") ? "selected" : ""; ?>>Select Status</option>
             <option value="Pending" <?php echo $status === "Pending" ? "selected" : ""; ?>>Pending</option>
             <option value="Resolved" <?php echo $status === "Resolved" ? "selected" : ""; ?>>Resolved</option>
         </select>
         <br><br>
-        <input type="submit" value="Update Status">
+        <input type="submit" value="Update Status" <?php echo (strtolower($status) === 'resolved') ? 'disabled' : ''; ?>>
     </form>
+
+    <?php if (strtolower($status) === 'resolved'): ?>
+        <p class="info-message">This complaint is already resolved and cannot be updated.</p>
+    <?php endif; ?>
 </div>
 
 <?php include "../includes/footer.php"; ?>

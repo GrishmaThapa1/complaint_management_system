@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../includes/db.php"; // Correct path from user/register.php
+include "../includes/db.php"; 
 
 $error = "";
 $success = "";
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->execute()) {
             $success = "Registration successful! You can now <a href='../login.php'>login</a>.";
-            $username = $email = ""; // clear form
+            $username = $email = ""; 
         } else {
             if (strpos($stmt->error, "Duplicate entry") !== false) {
                 $error = "This email or username is already registered.";
