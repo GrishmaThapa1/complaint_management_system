@@ -36,17 +36,17 @@ $resolved_complaints = $row['resolved'];
     <div class="cards">
         <div class="card total">
             <i class="fas fa-list-alt"></i>
-            <h2><?php echo $total_complaints; ?></h2>
+            <h2 style="color:white;"><?php echo $total_complaints; ?></h2>
             <p>Total Complaints</p>
         </div>
         <div class="card pending">
             <i class="fas fa-clock"></i>
-            <h2><?php echo $pending_complaints; ?></h2>
+            <h2 style="color:white;"><?php echo $pending_complaints; ?></h2>
             <p>Pending Complaints</p>
         </div>
         <div class="card resolved">
             <i class="fas fa-check-circle"></i>
-            <h2><?php echo $resolved_complaints; ?></h2>
+            <h2 style="color:white;"><?php echo $resolved_complaints; ?></h2>
             <p>Resolved Complaints</p>
         </div>
     </div>

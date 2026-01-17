@@ -15,41 +15,57 @@ if (!isset($_GET['id'])) {
 
 $complaint_id = intval($_GET['id']);
 
-// Fetch complaint details
-$stmt = $conn->prepare("SELECT user_id, status FROM complaints WHERE id=?");
+/* Fetch complaint */
+$stmt = $conn->prepare(
+    "SELECT user_id, status, admin_remarks 
+     FROM complaints 
+     WHERE id=?"
+);
 $stmt->bind_param("i", $complaint_id);
 $stmt->execute();
-$stmt->bind_result($user_id, $status);
+$stmt->bind_result($user_id, $status, $admin_remarks);
 $stmt->fetch();
 $stmt->close();
 
-// Ensure $status is always a string
-$status = $status ?? "";
+$status = strtolower($status ?? "pending"); // default to pending
+$admin_remarks = $admin_remarks ?? "";
 
-// Handle POST update
 $error_message = "";
-if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $new_status = $_POST['status'] ?? "";
 
-    if (empty($new_status)) {
-        $error_message = "Please select a status first!";
-    } elseif (strtolower($status) === 'resolved') {
-        // Prevent updating if already resolved
-        $error_message = "Cannot update status. This complaint is already resolved.";
+/* Handle update */
+if ($_SERVER['REQUEST_METHOD'] === "POST" && $status === 'pending') {
+
+    $new_remarks = trim($_POST['admin_remarks'] ?? '');
+
+    if (empty($new_remarks)) {
+        $error_message = "Admin remark is required when resolving a complaint.";
     } else {
-        // Update complaint status
-        $stmt = $conn->prepare("UPDATE complaints SET status=? WHERE id=?");
-        $stmt->bind_param("si", $new_status, $complaint_id);
-        if ($stmt->execute()) {
-            $_SESSION['success_message'] = "Status updated successfully";
 
-            // Create notification for the user
-            $notification_message = "Your complaint status has been updated to: $new_status";
-            $stmt = $conn->prepare("INSERT INTO notifications (user_id, message, status) VALUES (?, ?, 'unread')");
-            $stmt->bind_param("is", $user_id, $notification_message);
-            $stmt->execute();
+        /* Update complaint to resolved */
+        $stmt = $conn->prepare(
+            "UPDATE complaints 
+             SET status='resolved', admin_remarks=? 
+             WHERE id=?"
+        );
+        $stmt->bind_param("si", $new_remarks, $complaint_id);
+
+        if ($stmt->execute()) {
+
+            $_SESSION['success_message'] = "Complaint resolved successfully.";
+
+            /* Send notification to user */
+            $message = "Your complaint has been resolved. Admin Remark: " . $new_remarks;
+            $notify = $conn->prepare(
+                "INSERT INTO notifications (user_id, message, status)
+                 VALUES (?, ?, 'unread')"
+            );
+            $notify->bind_param("is", $user_id, $message);
+            $notify->execute();
+
+            $status = 'resolved';
+            $admin_remarks = $new_remarks;
         } else {
-            $error_message = "Error updating status: " . $conn->error;
+            $error_message = "Failed to update complaint.";
         }
     }
 }
@@ -61,27 +77,61 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     <h2>Update Complaint Status</h2>
 
     <?php if (!empty($_SESSION['success_message'])): ?>
-        <p class="message" id="successMsg"><?php echo $_SESSION['success_message']; ?></p>
+        <p class="message" id="adminRemarkMsg"><?= $_SESSION['success_message']; ?></p>
         <?php unset($_SESSION['success_message']); ?>
+
+        <!-- Redirect to view_complaints.php after 2.5 seconds -->
+        <script>
+            setTimeout(() => {
+                window.location.href = "view_complaints.php";
+            }, 2500);
+        </script>
     <?php endif; ?>
 
     <?php if (!empty($error_message)): ?>
-        <p class="error-message"><?php echo $error_message; ?></p>
+        <p class="error-message"><?= $error_message; ?></p>
     <?php endif; ?>
 
-    <form method="POST">
-        <label for="status">Update Status:</label><br>
-        <select name="status" id="status" required <?php echo (strtolower($status) === 'resolved') ? 'disabled' : ''; ?>>
-            <option value="" disabled <?php echo empty($status) || ($status !== "Pending" && $status !== "Resolved") ? "selected" : ""; ?>>Select Status</option>
-            <option value="Pending" <?php echo $status === "Pending" ? "selected" : ""; ?>>Pending</option>
-            <option value="Resolved" <?php echo $status === "Resolved" ? "selected" : ""; ?>>Resolved</option>
-        </select>
-        <br><br>
-        <input type="submit" value="Update Status" <?php echo (strtolower($status) === 'resolved') ? 'disabled' : ''; ?>>
-    </form>
+    <?php if ($status === 'resolved'): ?>
+        <p class="info-message">This complaint is already resolved.</p>
+        <div style="margin-top:15px; padding:12px; background:#f0f0f0;
+                    border-left:4px solid #28a745; border-radius:6px;">
+            <strong>Admin Remark:</strong>
+            <p><?= htmlspecialchars($admin_remarks); ?></p>
+        </div>
 
-    <?php if (strtolower($status) === 'resolved'): ?>
-        <p class="info-message">This complaint is already resolved and cannot be updated.</p>
+        <!-- Back to View Complaints button for resolved complaints -->
+        <div style="text-align:center; margin-top:20px;">
+            <a href="view_complaints.php"
+                style="padding:12px 24px; border-radius:8px; background:#007bff; color:white; 
+                       text-decoration:none; font-weight:bold; font-size:16px; display:inline-block; 
+                       text-align:center; cursor:pointer; box-shadow:0 4px 6px rgba(0,123,255,0.3); border:none; transition:all 0.3s ease;">
+                Back to View Complaints
+            </a>
+        </div>
+
+    <?php else: ?>
+        <!-- Pending complaint → admin can resolve -->
+        <form method="POST">
+            <label>Admin Remark (Required)</label>
+            <textarea name="admin_remarks" rows="4" required
+                style="width:100%; padding:8px; border-radius:6px; border:1px solid #ccc;"></textarea>
+            <br><br>
+            <div style="text-align:center; gap:15px; display:flex; justify-content:center; flex-wrap:wrap; margin-top:20px;">
+                <!-- Submit button -->
+                <input type="submit" value="Mark as Resolved"
+                    style="padding:12px 24px; border-radius:8px; background:#007bff; color:white; 
+                           border:none; cursor:pointer; font-weight:bold; font-size:16px; 
+                           box-shadow:0 4px 6px rgba(0,123,255,0.3); transition:all 0.3s ease; appearance:none; -webkit-appearance:none;">
+                <!-- Back button -->
+                <a href="view_complaints.php"
+                    style="padding:12px 24px; border-radius:8px; background:#007bff; color:white; 
+                           text-decoration:none; font-weight:bold; font-size:16px; display:inline-block; 
+                           text-align:center; cursor:pointer; box-shadow:0 4px 6px rgba(0,123,255,0.3); border:none; transition:all 0.3s ease;">
+                    Back to View Complaints
+                </a>
+            </div>
+        </form>
     <?php endif; ?>
 </div>
 

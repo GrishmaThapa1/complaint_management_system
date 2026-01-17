@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../includes/db.php"; 
+include "../includes/db.php";
 
 $error = "";
 $success = "";
@@ -16,6 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check passwords match
     if ($password !== $confirm_password) {
         $error = "Passwords do not match!";
+    }
+    // Minimum 6 characters password
+    elseif (strlen($password) < 6) {
+        $error = "Password must be at least 6 characters long!";
     } else {
         // Hash password
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
@@ -25,8 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sss", $username, $email, $hashed_password);
 
         if ($stmt->execute()) {
-            $success = "Registration successful! You can now <a href='../login.php'>login</a>.";
-            $username = $email = ""; 
+            $success = "Registration successful!";
+            $username = $email = "";
+            header('Location: ../login.php');
         } else {
             if (strpos($stmt->error, "Duplicate entry") !== false) {
                 $error = "This email or username is already registered.";

@@ -16,9 +16,9 @@ if (!isset($_GET['id'])) {
 $id = intval($_GET['id']);
 $user_id = intval($_SESSION['user_id']);
 
-// Fetch complaint
+// Fetch complaint including admin_remarks
 $stmt = $conn->prepare(
-    "SELECT complaint_text, status, created_at 
+    "SELECT complaint_text, attachment, status, created_at, admin_remarks 
      FROM complaints 
      WHERE id=? AND user_id=?"
 );
@@ -32,6 +32,10 @@ if ($result->num_rows === 0) {
 }
 
 $complaint = $result->fetch_assoc();
+$status = strtolower($complaint['status']);
+$admin_remark = !empty($complaint['admin_remarks'])
+    ? $complaint['admin_remarks']
+    : "Your complaint has been received and is under review.";
 
 // Check if feedback already exists
 $feedback_stmt = $conn->prepare(
@@ -46,45 +50,62 @@ $feedback = $feedback_result->fetch_assoc();
 ?>
 
 <div class="complaint-view">
-    <h2>Complaint Details</h2>
+    <h2 style="margin-bottom:25px; text-align:center;">Complaint Details</h2>
 
-    <p><strong>Complaint:</strong> <?= htmlspecialchars($complaint['complaint_text']) ?></p>
+    <!-- Complaint Text -->
+    <div style="margin-bottom:20px; padding:15px; background:#f8f9fa; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
+        <p style="margin:0; font-size:16px; line-height:1.6;"><strong>Complaint:</strong> <?= htmlspecialchars($complaint['complaint_text']) ?></p>
+    </div>
 
-    <p><strong>Status:</strong>
-        <span class="status <?= strtolower($complaint['status']) ?>">
-            <?= htmlspecialchars($complaint['status']) ?>
+    <!-- Admin Remarks (Always shown) -->
+    <div style="margin-bottom:20px; padding:15px; background:#fff3cd; border-left:5px solid #ffecb5; border-radius:8px; font-size:15px; color:#856404;">
+        <strong>Admin Remark:</strong> <?= htmlspecialchars($admin_remark) ?>
+    </div>
+
+    <!-- Attachment -->
+    <?php if (!empty($complaint['attachment'])): ?>
+        <div class="complaint-attachment" style="margin: 20px 0; text-align:center;">
+            <?php
+            $file_path = '../uploads/' . $complaint['attachment'];
+            $ext = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
+
+            if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])): ?>
+                <a href="<?= $file_path ?>" target="_blank">
+                    <img src="<?= $file_path ?>" style="max-width:300px; max-height:300px; border:1px solid #ccc; border-radius:8px;">
+                </a>
+            <?php elseif ($ext === 'pdf'): ?>
+                <a href="<?= $file_path ?>" target="_blank" style="padding:10px 18px; background:#5563DE; color:white; border-radius:8px; text-decoration:none;">📄 View PDF</a>
+            <?php else: ?>
+                <a href="<?= $file_path ?>" target="_blank">Download Attachment</a>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Status & Date Box -->
+    <div style="padding:15px; background:#f8f9fa; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.05); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:25px;">
+        <span style="background:<?= $status === 'pending' ? '#f0ad4e' : '#28a745' ?>; color:white; padding:6px 14px; border-radius:6px; font-weight:500;">
+            <?= ucfirst($status) ?>
         </span>
-    </p>
+        <span style="font-size:14px; color:#555;">Created: <?= date("d M Y", strtotime($complaint['created_at'])) ?></span>
+    </div>
 
-    <p class="date-line">
-        <strong>Date:</strong> <?= date("d M Y", strtotime($complaint['created_at'])) ?>
-    </p>
-
-    <!-- ===== FEEDBACK SECTION ===== -->
-    <?php if (strtolower($complaint['status']) === 'resolved'): ?>
-
-        <hr>
-
+    <!-- Feedback Section -->
+    <?php if ($status === 'resolved'): ?>
+        <hr style="margin:25px 0; border-color:#ddd;">
         <?php if ($feedback): ?>
-            <!-- Show submitted feedback -->
-            <div class="feedback-box">
-                <h3>Your Feedback</h3>
+            <div class="feedback-box" style="padding:15px; background:#f0f8ff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:20px;">
+                <h3 style="margin-top:0;">Your Feedback</h3>
                 <p><strong>Rating:</strong> <?= $feedback['rating'] ?>/5 ⭐</p>
                 <p><strong>Comment:</strong> <?= htmlspecialchars($feedback['comment']) ?></p>
-                <small>
-                    Submitted on <?= date("d M Y", strtotime($feedback['created_at'])) ?>
-                </small>
+                <small>Submitted on <?= date("d M Y", strtotime($feedback['created_at'])) ?></small>
             </div>
-
         <?php else: ?>
-            <!-- Feedback form -->
-            <div class="feedback-form">
-                <h3>Submit Feedback</h3>
+            <div class="feedback-form" style="padding:15px; background:#f9f9f9; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:20px;">
+                <h3 style="margin-top:0;">Submit Feedback</h3>
                 <form method="POST" action="submit_feedback.php">
                     <input type="hidden" name="complaint_id" value="<?= $id ?>">
-
                     <label>Rating:</label>
-                    <select name="rating" required>
+                    <select name="rating" required style="padding:6px 10px; margin:5px 0 15px 0; border-radius:5px; border:1px solid #ccc;">
                         <option value="">Select</option>
                         <option value="5">⭐⭐⭐⭐⭐</option>
                         <option value="4">⭐⭐⭐⭐</option>
@@ -94,18 +115,17 @@ $feedback = $feedback_result->fetch_assoc();
                     </select>
 
                     <label>Comment:</label>
-                    <textarea name="comment" rows="4" placeholder="Write your feedback..."></textarea>
+                    <textarea name="comment" rows="4" placeholder="Write your feedback..." style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; margin-bottom:10px;"></textarea>
 
-                    <button type="submit" class="btn">Submit Feedback</button>
+                    <button type="submit" class="btn" style="display:inline-block;">Submit Feedback</button>
                 </form>
             </div>
         <?php endif; ?>
-
     <?php endif; ?>
-    <!-- ===== END FEEDBACK ===== -->
 
-    <div class="btn-center">
-        <a href="dashboard.php" class="btn-back">Back to Dashboard</a>
+    <!-- Back Button -->
+    <div class="btn-center" style="text-align:center; margin-top:20px;">
+        <a href="dashboard.php" class="btn-back" style="padding:10px 18px; border-radius:8px; background:#0073ff; color:white; text-decoration:none;">Back to Dashboard</a>
     </div>
 </div>
 

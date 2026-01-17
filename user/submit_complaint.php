@@ -20,22 +20,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $attachment_path = NULL; // default if no file uploaded
     if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
         $file_tmp = $_FILES['attachment']['tmp_name'];
-        $file_name = time() . '_' . basename($_FILES['attachment']['name']); // unique filename
+        $file_name = time() . '_' . uniqid() . '_' . basename($_FILES['attachment']['name']); // unique filename
         $file_type = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
         $allowed_types = ['jpg', 'jpeg', 'png', 'pdf'];
 
         if (!in_array($file_type, $allowed_types)) {
-            $error = "Invalid file type. Only JPG, PNG, and PDF allowed.";
+            $error = "❌ Invalid file type. Only JPG, PNG, and PDF allowed.";
+        } elseif ($_FILES['attachment']['size'] > 2 * 1024 * 1024) { // 2MB limit
+            $error = "❌ File size must be less than 2MB.";
         } else {
-            $upload_dir = "../uploads/complaints/";
+            $upload_dir = "../uploads/"; // <-- just one folder now
             if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
 
             $destination = $upload_dir . $file_name;
             if (move_uploaded_file($file_tmp, $destination)) {
                 $attachment_path = $file_name;
             } else {
-                $error = "Failed to upload file.";
+                $error = "❌ Failed to upload file.";
             }
         }
     }
