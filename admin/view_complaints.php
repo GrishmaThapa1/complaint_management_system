@@ -14,7 +14,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 $date = isset($_GET['date']) ? $_GET['date'] : ''; // single date
 
 // Build SQL with filters
-$sql = "SELECT complaints.id, users.username, complaints.complaint_text, complaints.status, complaints.created_at
+$sql = "SELECT complaints.id, users.username, complaints.complaint_text, complaints.status, complaints.created_at, complaints.attachment
         FROM complaints
         JOIN users ON complaints.user_id = users.id
         WHERE (complaints.id LIKE ? OR users.username LIKE ? OR complaints.complaint_text LIKE ?)";
@@ -94,12 +94,28 @@ $result = $stmt->get_result();
                             <div class="complaint-text">
                                 <?= htmlspecialchars($row['complaint_text']) ?>
                             </div>
+
+                            <!-- Attachment Link -->
+                           <!-- Attachment Button -->
+<?php if (!empty($row['attachment'])): ?>
+    <div style="margin-top:10px;">
+        <a href="../uploads/<?= htmlspecialchars($row['attachment']) ?>" target="_blank" 
+           style="display:inline-block; background:#3B82F6; color:#fff; padding:6px 12px; border-radius:6px; text-decoration:none;">
+            Attachment: View
+        </a>
+    </div>
+<?php endif; ?>
+
+
+
                         </div>
 
                         <!-- Card Footer -->
-                        <div class="card-footer" style="margin-top:10px;">
-                            <a href="update_status.php?id=<?= $row['id'] ?>" class="btn">Update Status</a>
-                        </div>
+                       <!-- Card Footer -->
+<div class="card-footer" style="margin-top:15px;"> <!-- increase margin-top from 10px to 15px -->
+    <a href="update_status.php?id=<?= $row['id'] ?>" class="btn">Update Status</a>
+</div>
+
                     </div>
                 <?php endwhile; ?>
             </div>
@@ -125,28 +141,24 @@ $result = $stmt->get_result();
             const status = statusSelect.value;
             const date = dateInput.value;
 
-            // Handle search parameter
             if (search !== '') {
                 url.searchParams.set('search', search);
             } else {
                 url.searchParams.delete('search');
             }
 
-            // Handle status parameter
             if (status !== '') {
                 url.searchParams.set('status', status);
             } else {
                 url.searchParams.delete('status');
             }
 
-            // Handle date parameter
             if (date !== '') {
                 url.searchParams.set('date', date);
             } else {
                 url.searchParams.delete('date');
             }
 
-            // Store cursor position and focus state for search input
             if (document.activeElement === searchInput) {
                 sessionStorage.setItem('searchCursorPosition', searchInput.selectionStart);
                 sessionStorage.setItem('searchWasFocused', 'true');
@@ -158,51 +170,42 @@ $result = $stmt->get_result();
             window.location.href = url.toString();
         }
 
-        // Restore focus and cursor position on page load
         window.addEventListener('load', function() {
             const wasFocused = sessionStorage.getItem('searchWasFocused');
             const cursorPosition = sessionStorage.getItem('searchCursorPosition');
 
             if (wasFocused === 'true') {
                 searchInput.focus();
-
                 if (cursorPosition !== null) {
                     const pos = parseInt(cursorPosition);
                     searchInput.setSelectionRange(pos, pos);
                 }
-
-                // Clear the flags
                 sessionStorage.removeItem('searchWasFocused');
                 sessionStorage.removeItem('searchCursorPosition');
             }
         });
 
-        // Debounced search input
         searchInput.addEventListener('input', function() {
             clearTimeout(debounceTimer);
-
             debounceTimer = setTimeout(function() {
                 updateURL();
-            }, 500); // 500ms debounce delay
+            }, 500);
         });
 
-        // Instant update for status select
         statusSelect.addEventListener('change', function() {
-            clearTimeout(debounceTimer); // Clear any pending search debounce
+            clearTimeout(debounceTimer);
             sessionStorage.removeItem('searchWasFocused');
             sessionStorage.removeItem('searchCursorPosition');
             updateURL();
         });
 
-        // Instant update for date input
         dateInput.addEventListener('change', function() {
-            clearTimeout(debounceTimer); // Clear any pending search debounce
+            clearTimeout(debounceTimer);
             sessionStorage.removeItem('searchWasFocused');
             sessionStorage.removeItem('searchCursorPosition');
             updateURL();
         });
 
-        // Prevent form submission (we handle it via JavaScript)
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             clearTimeout(debounceTimer);

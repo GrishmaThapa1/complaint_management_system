@@ -103,9 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && $status === 'pending') {
         <!-- Back to View Complaints button for resolved complaints -->
         <div style="text-align:center; margin-top:20px;">
             <a href="view_complaints.php"
-                style="padding:12px 24px; border-radius:8px; background:#007bff; color:white; 
-                       text-decoration:none; font-weight:bold; font-size:16px; display:inline-block; 
-                       text-align:center; cursor:pointer; box-shadow:0 4px 6px rgba(0,123,255,0.3); border:none; transition:all 0.3s ease;">
+                style="padding:12px 24px !important; border-radius:8px !important; background:#007bff !important; color:white !important; 
+                       text-decoration:none !important; font-weight:bold !important; font-size:16px !important; display:inline-block !important; 
+                       text-align:center !important; cursor:pointer !important; box-shadow:0 4px 6px rgba(0,123,255,0.3) !important; border:none !important; transition:all 0.3s ease !important;">
                 Back to View Complaints
             </a>
         </div>
@@ -120,14 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && $status === 'pending') {
             <div style="text-align:center; gap:15px; display:flex; justify-content:center; flex-wrap:wrap; margin-top:20px;">
                 <!-- Submit button -->
                 <input type="submit" value="Mark as Resolved"
-                    style="padding:12px 24px; border-radius:8px; background:#007bff; color:white; 
-                           border:none; cursor:pointer; font-weight:bold; font-size:16px; 
-                           box-shadow:0 4px 6px rgba(0,123,255,0.3); transition:all 0.3s ease; appearance:none; -webkit-appearance:none;">
+                    style="padding:12px 24px !important; border-radius:8px !important; background:#007bff !important; color:white !important; 
+                           border:none !important; cursor:pointer !important; font-weight:bold !important; font-size:16px !important; 
+                           box-shadow:0 4px 6px rgba(0,123,255,0.3) !important; transition:all 0.3s ease !important; appearance:none !important; -webkit-appearance:none !important;">
                 <!-- Back button -->
                 <a href="view_complaints.php"
-                    style="padding:12px 24px; border-radius:8px; background:#007bff; color:white; 
-                           text-decoration:none; font-weight:bold; font-size:16px; display:inline-block; 
-                           text-align:center; cursor:pointer; box-shadow:0 4px 6px rgba(0,123,255,0.3); border:none; transition:all 0.3s ease;">
+                    style="padding:12px 24px !important; border-radius:8px !important; background:#007bff !important; color:white !important; 
+                           text-decoration:none !important; font-weight:bold !important; font-size:16px !important; display:inline-block !important; 
+                           text-align:center !important; cursor:pointer !important; box-shadow:0 4px 6px rgba(0,123,255,0.3) !important; border:none !important; transition:all 0.3s ease !important;">
                     Back to View Complaints
                 </a>
             </div>
