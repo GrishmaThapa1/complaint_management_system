@@ -22,7 +22,7 @@ include "includes/header.php";
     </div>
 </section>
 
-<!-- BRIDGE QUOTE / HEADING SECTION -->
+<!--  HEADING SECTION -->
 <section class="section-quote">
     <div class="container">
         <h2>Empowering Communities</h2>

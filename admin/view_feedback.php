@@ -1,15 +1,21 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php");
-    exit();
+
+// Prevent browser caching
+header("Cache-Control: no-store, no-cache, must-revalidate, private");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: ../login.php");
+    exit;
 }
 
 include "../includes/db.php";
 include "../includes/header.php";
 
 // Fetch all feedbacks with complaint and user info
-$sql = "SELECT f.id AS feedback_id, f.rating, f.comment, f.created_at AS feedback_date,
+$sql = "SELECT f.id AS feedback_id, f.rating, f.comments, f.created_at AS feedback_date,
         c.subject AS complaint_subject, u.username AS user_name
         FROM feedback f
         LEFT JOIN complaints c ON f.complaint_id = c.id
@@ -19,9 +25,15 @@ $sql = "SELECT f.id AS feedback_id, f.rating, f.comment, f.created_at AS feedbac
 $result = $conn->query($sql);
 ?>
 
+<script>
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+</script>
 
 <link rel="stylesheet" href="../css/style.css">
-
 
 <div class="dashboard-wrapper">
     <div class="dashboard-container">
@@ -46,7 +58,7 @@ $result = $conn->query($sql);
                                     <td><?= htmlspecialchars($row['user_name'] ?? 'Unknown User') ?></td>
                                     <td><?= htmlspecialchars($row['complaint_subject'] ?? 'Unknown Complaint') ?></td>
                                     <td><?= htmlspecialchars($row['rating']) ?> ⭐</td>
-                                    <td class="comment"><?= htmlspecialchars($row['comment']) ?></td>
+                                    <td class="comment"><?= htmlspecialchars($row['comments']) ?></td>
                                     <td><?= date("d M Y", strtotime($row['feedback_date'])) ?></td>
                                 </tr>
                             <?php endwhile; ?>

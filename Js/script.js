@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("✅ script.js loaded successfully");
 
-  /* ===== 1️⃣ Fade out messages ===== */
+  /* =====  Fade out messages ===== */
   document.querySelectorAll(".message, .success, .error").forEach((msg) => {
     setTimeout(() => {
       msg.style.transition = "opacity 1s ease-out";
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 2000);
   });
 
-  /* ===== 2️⃣ Smooth scroll for anchor links ===== */
+  /* ===== Smooth scroll for anchor links ===== */
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
       e.preventDefault();
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  /* ===== 3️⃣ Login form validation ===== */
+  /* ===== Login form validation ===== */
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", function (e) {
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* ===== 4️⃣ Register form validation ===== */
+  /* ===== Register form validation ===== */
   const registerForm = document.getElementById("registerForm");
   if (registerForm) {
     registerForm.addEventListener("submit", function (e) {
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* ===== 5️⃣ Password toggle ===== */
+  /* ===== Password toggle ===== */
   document.querySelectorAll(".password-toggle").forEach((icon) => {
     icon.addEventListener("click", function (e) {
       e.stopPropagation();
@@ -62,21 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  /* ===== 6️⃣ Profile page fade & redirect ===== */
-  const profileMsg = document.getElementById("profileMessage");
-  if (profileMsg) {
-    setTimeout(() => {
-      profileMsg.style.transition = "opacity 1s ease-out";
-      profileMsg.style.opacity = "0";
-      setTimeout(() => profileMsg.remove(), 1000);
-    }, 2000);
+  
 
-    if (profileMsg.classList.contains("success")) {
-      setTimeout(() => (window.location.href = "profile.php"), 2500);
-    }
-  }
-
-  /* ===== 7️⃣ Other success messages & optional redirect ===== */
+  /* ===== Other success messages & optional redirect ===== */
   const successMsg = document.getElementById("successMsg");
   if (successMsg) {
     setTimeout(() => {
@@ -94,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 2500);
   }
 
-  /* ===== 8️⃣ Header dropdown toggle ===== */
+  /* ===== Header dropdown toggle ===== */
   document.querySelectorAll(".user-dropdown").forEach((dd) => {
     const icon = dd.querySelector("i");
     const content = dd.querySelector(".dropdown-content");
@@ -117,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .forEach((d) => d.classList.remove("show"));
   });
 
-  /* ===== 9️⃣ Confirm logout ===== */
+  /* ===== Confirm logout ===== */
   document.querySelectorAll(".logout-link").forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault();
@@ -127,51 +115,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  /* ===== 🔟 Mark notifications as read ===== */
-  const notificationsPage = document.querySelector(".notifications-page");
-  if (notificationsPage) {
-    notificationsPage.addEventListener("click", (e) => {
-      if (e.target.classList.contains("mark-read-btn")) {
-        const notificationId = e.target.dataset.id;
-
-        if (!notificationId) {
-          console.error("No notification ID found on button!");
-          return;
-        }
-
-        console.log("Sending fetch for notification ID:", notificationId);
-
-        fetch("mark_notifications.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: "id=" + encodeURIComponent(notificationId),
-        })
-          .then((response) => response.text())
-          .then((result) => {
-            console.log("Mark read response:", result);
-
-            if (result.trim() === "success") {
-              const li = document.querySelector(
-                `li[data-id="${notificationId}"]`
-              );
-              if (li) {
-                li.classList.remove("unread");
-                li.classList.add("read");
-                e.target.remove();
-              }
-
-              const badge = document.querySelector(".bell-icon .badge");
-              if (badge) {
-                let count = parseInt(badge.textContent) - 1;
-                if (count > 0) badge.textContent = count;
-                else badge.remove();
-              }
-            } else {
-              alert("Failed to mark notification as read.");
-            }
-          })
-          .catch((err) => console.error("Fetch error:", err));
-      }
-    });
-  }
-});
+})

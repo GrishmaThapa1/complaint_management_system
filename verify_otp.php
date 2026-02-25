@@ -14,7 +14,7 @@ if (isset($_POST['verify'])) {
 
     if ($entered_otp == $_SESSION['otp']) {
         $success = "OTP verified successfully! Redirecting...";
-        // Do not use header() here; use JS for delay
+        
     } else {
         $error = "Invalid OTP!";
     }

@@ -14,7 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     $email = $_SESSION['reset_email'];
-    $role = $_SESSION['role'];
 
     if (empty($new_password) || empty($confirm_password)) {
         $error = "All fields are required.";
@@ -24,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Password must be at least 6 characters.";
     } else {
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        $table = ($role === 'admin') ? 'admins' : 'users';
+        $table = 'users'; // only users table for demo
 
         $stmt = $conn->prepare("UPDATE $table SET password=? WHERE email=?");
         $stmt->bind_param("ss", $hashed_password, $email);
@@ -89,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <script>
             setTimeout(() => {
                 window.location.href = '/complaint_management/login.php';
-            }, 2000); // redirect after 2 seconds
+            }, 2000);
         </script>
     <?php endif; ?>
 </body>

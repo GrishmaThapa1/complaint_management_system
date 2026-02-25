@@ -1,36 +1,50 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php");
-    exit();
+
+// Prevent browser caching
+header("Cache-Control: no-store, no-cache, must-revalidate, private");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: ../login.php");
+    exit;
 }
 
 include "../includes/db.php";
 include "../includes/header.php";
 
-// Show success message if exists
-if (isset($_SESSION['success_message'])) {
-    echo "<p class='success-message'>" . $_SESSION['success_message'] . "</p>";
-    unset($_SESSION['success_message']);
-}
-
 // Count total complaints
 $result = $conn->query("SELECT COUNT(*) as total FROM complaints");
 $row = $result->fetch_assoc();
-$total_complaints = $row['total'];
+$total_complaints = $row['total'] ?? 0;
 
 // Count pending complaints
-$result = $conn->query("SELECT COUNT(*) as pending FROM complaints WHERE status='Pending'");
+$result = $conn->query("SELECT COUNT(*) as pending FROM complaints WHERE status='pending'");
 $row = $result->fetch_assoc();
-$pending_complaints = $row['pending'];
+$pending_complaints = $row['pending'] ?? 0;
 
 // Count resolved complaints
-$result = $conn->query("SELECT COUNT(*) as resolved FROM complaints WHERE status='Resolved'");
+$result = $conn->query("SELECT COUNT(*) as resolved FROM complaints WHERE status='resolved'");
 $row = $result->fetch_assoc();
-$resolved_complaints = $row['resolved'];
+$resolved_complaints = $row['resolved'] ?? 0;
 ?>
 
+<script>
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+</script>
+
 <div class="admin-dashboard">
+
+    <?php if (isset($_SESSION['success_message'])): ?>
+        <p class="success-message"><?php echo $_SESSION['success_message'];
+                                    unset($_SESSION['success_message']); ?></p>
+    <?php endif; ?>
+
     <h2>Admin Dashboard</h2>
 
     <div class="cards">
@@ -51,10 +65,11 @@ $resolved_complaints = $row['resolved'];
         </div>
     </div>
 
-    <div class="dashboard-buttons" style="margin-top:20px;">
+    <div class="dashboard-buttons" style="margin-top: 20px;">
         <a href="view_complaints.php" class="btn">View Complaints</a>
         <a href="view_feedback.php" class="btn" style="margin-left: 10px;">View Feedback</a>
     </div>
+
 </div>
 
 <?php include "../includes/footer.php"; ?>

@@ -32,7 +32,7 @@ if (isset($_POST['send_message'])) {
         $mail->setFrom($email, $name);
         $mail->addAddress('grishmathp@gmail.com', 'Complaint Management System');
 
-        // Content
+       
         $mail->isHTML(true);
         $mail->Subject = "New Contact Message from $name";
         $mail->Body    = "

@@ -15,52 +15,45 @@ $redirect = false;
 if (isset($_POST['submit'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
 
-    // Check in users table
-    $query_user = "SELECT * FROM users WHERE email='$email'";
+    // Check if email exists in users table
+    $query_user = "SELECT * FROM users WHERE email='$email' LIMIT 1";
     $result_user = mysqli_query($conn, $query_user);
 
     if (mysqli_num_rows($result_user) > 0) {
-        $_SESSION['role'] = 'user';
-    } else {
-        // Check in admins table
-        $query_admin = "SELECT * FROM admins WHERE email='$email'";
-        $result_admin = mysqli_query($conn, $query_admin);
-
-        if (mysqli_num_rows($result_admin) > 0) {
-            $_SESSION['role'] = 'admin';
-        } else {
-            $message = "Email not found!";
-            $_SESSION['role'] = null;
-        }
-    }
-
-    if (!empty($_SESSION['role'])) {
+        $user = mysqli_fetch_assoc($result_user);
+        $_SESSION['role'] = $user['role']; 
         $_SESSION['reset_email'] = $email;
         $_SESSION['otp'] = rand(100000, 999999);
 
-        // Send OTP
+        // PHPMailer
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'grishmathp@gmail.com';
-            $mail->Password   = 'txeg lonp ieyh mjul';
+            $mail->Username   = 'grishmathp@gmail.com'; 
+            $mail->Password   = 'txeg lonp ieyh mjul'; 
             $mail->SMTPSecure = 'tls';
             $mail->Port       = 587;
 
             $mail->setFrom('grishmathp@gmail.com', 'Complaint Management System');
-            $mail->addAddress($email);
+            $mail->addAddress('grishmathp@gmail.com'); 
             $mail->isHTML(true);
             $mail->Subject = 'Your OTP for Password Reset';
-            $mail->Body    = "OTP for resetting <b>{$email}</b> is: <b>{$_SESSION['otp']}</b>";
-            $mail->send();
+            $mail->Body    = "
+                OTP for resetting <b>{$email}</b> is: 
+                <h2>{$_SESSION['otp']}</h2>
+            ";
 
-            $message = "OTP sent successfully to your email.";
-            $redirect = true; // Flag to redirect after showing message
+            $mail->send();
+            $message = "OTP sent successfully for <b>{$email}</b>";
+            $redirect = true;
         } catch (Exception $e) {
             $message = "Mailer Error: {$mail->ErrorInfo}";
         }
+    } else {
+        $message = "Email not found!";
+        $_SESSION['role'] = null;
     }
 }
 ?>
@@ -84,7 +77,9 @@ if (isset($_POST['submit'])) {
         </form>
 
         <?php if (!empty($message)): ?>
-            <p class="<?= empty($_SESSION['role']) ? 'error' : 'success' ?>"><?= $message ?></p>
+            <p class="<?= empty($_SESSION['role']) ? 'error' : 'success' ?>">
+                <?= $message ?>
+            </p>
         <?php endif; ?>
 
         <p><a href="/complaint_management/login.php" class="back-link">← Back to Login</a></p>
@@ -92,14 +87,12 @@ if (isset($_POST['submit'])) {
 
     <?php if ($redirect): ?>
         <script>
-            // Redirect to OTP verification after 2 seconds
+            
             setTimeout(() => {
                 window.location.href = '/complaint_management/verify_otp.php';
-            }, 2000);
+            }, 1500);
         </script>
     <?php endif; ?>
-
-    <script src="/complaint_management/Js/script.js"></script>
 </body>
 
 </html>

@@ -2,6 +2,11 @@
 session_start();
 include __DIR__ . '/../includes/db.php';
 
+// Prevent browser caching
+header("Cache-Control: no-store, no-cache, must-revalidate, private");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: /complaint_management/login.php");
@@ -26,10 +31,10 @@ include __DIR__ . '/../includes/header.php';
             <h2>Your Profile</h2>
 
             <!-- Only show image if it exists -->
-            <?php if ($user['image'] && file_exists(__DIR__ . '/../Image/' . $user['image'])): ?>
-                <div style="text-align:center; margin-bottom:20px;">
-                    <img src="/complaint_management/Image/<?php echo htmlspecialchars($user['image']); ?>"
-                        alt="Profile Image" style="height:100px; border-radius:50%;">
+     <?php if ($user['image'] && file_exists(__DIR__ . '/../Image/' . $user['image'])): ?>
+      <div style="text-align:center; margin-bottom:20px;">
+      <img src="/complaint_management/Image/<?php echo htmlspecialchars($user['image']); ?>"
+              alt="Profile Image" style="height:100px; border-radius:50%;">
                 </div>
             <?php endif; ?>
 

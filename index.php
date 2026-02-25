@@ -16,7 +16,7 @@ include "includes/header.php";
 <main>
     <!-- FEATURES -->
     <section class="features full-width-section">
-        <h2>Features</h2> <!-- ✅ moved outside .container -->
+        <h2>Features</h2> 
         <div class="container">
             <div class="facilities-base">
                 <div class="feature-box facility-box">
@@ -52,7 +52,7 @@ include "includes/header.php";
                 <div class="facility-box">
                     <div class="facility-icon"><i class="fas fa-shield-alt"></i></div>
                     <h3>Secure System</h3>
-                    <p>Your data is safe with our highly secured system.</p>
+                    <p>Your data is safe with secured system.</p>
                 </div>
                 <div class="facility-box">
                     <div class="facility-icon"><i class="fas fa-tachometer-alt"></i></div>

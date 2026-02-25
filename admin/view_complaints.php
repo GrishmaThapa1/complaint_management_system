@@ -1,6 +1,13 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_id'])) {
+
+// Prevent browser caching 
+header("Cache-Control: no-store, no-cache, must-revalidate, private");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Redirect to login if not logged in as admin
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
@@ -11,7 +18,7 @@ include "../includes/header.php";
 // Get filter/search inputs
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $status = isset($_GET['status']) ? $_GET['status'] : '';
-$date = isset($_GET['date']) ? $_GET['date'] : ''; // single date
+$date = isset($_GET['date']) ? $_GET['date'] : '';
 
 // Build SQL with filters
 $sql = "SELECT complaints.id, users.username, complaints.complaint_text, complaints.status, complaints.created_at, complaints.attachment
@@ -19,7 +26,7 @@ $sql = "SELECT complaints.id, users.username, complaints.complaint_text, complai
         JOIN users ON complaints.user_id = users.id
         WHERE (complaints.id LIKE ? OR users.username LIKE ? OR complaints.complaint_text LIKE ?)";
 
-$params = ["%%", "%%", "%%"]; // default
+$params = ["%", "%", "%"];
 
 if (!empty($search)) {
     $search_param = "%$search%";
@@ -40,12 +47,24 @@ $sql .= " ORDER BY complaints.created_at DESC";
 
 $stmt = $conn->prepare($sql);
 
-// Bind parameters dynamically
-$types = str_repeat('s', count($params));
-$stmt->bind_param($types, ...$params);
-$stmt->execute();
-$result = $stmt->get_result();
+if ($stmt) {
+    $types = str_repeat('s', count($params));
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    die("SQL Prepare Error: " . $conn->error);
+}
 ?>
+
+<script>
+    // Handle back button cache 
+    window.onpageshow = function(event) {
+        if (event.persisted || (window.performance && window.performance.getEntriesByType("navigation")[0].type === "back_forward")) {
+            window.location.reload();
+        }
+    };
+</script>
 
 <div class="admin-dashboard">
     <h2>All Complaints</h2>
@@ -58,64 +77,40 @@ $result = $stmt->get_result();
             <option value="Pending" <?= strtolower($status) === 'pending' ? 'selected' : '' ?>>Pending</option>
             <option value="Resolved" <?= strtolower($status) === 'resolved' ? 'selected' : '' ?>>Resolved</option>
         </select>
-        <input type="date" id="dateInput" name="date" value="<?= $date ?>"
+        <input type="date" id="dateInput" name="date" value="<?= htmlspecialchars($date) ?>"
             max="<?= date('Y-m-d'); ?>"
             style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc;">
         <button type="submit" style="padding: 8px 16px; background: #5563DE; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Search</button>
     </form>
 
     <div class="view-complaints">
-        <?php if ($result->num_rows > 0): ?>
+        <?php if ($result && $result->num_rows > 0): ?>
             <div class="cards">
                 <?php while ($row = $result->fetch_assoc()): ?>
-                    <?php
-                    $status_class = strtolower($row['status']);
-                    $status_icon = ($status_class === 'pending') ? 'fas fa-hourglass-half' : 'fas fa-check-circle';
-                    ?>
+                    <?php $status_class = strtolower($row['status']); ?>
                     <div class="card <?= $status_class ?>">
-                        <!-- Card Header -->
                         <div class="card-header">
-                            <div class="header-top" style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <h3>Complaint #<?= $row['id'] ?></h3>
-                                <div class="status-block" style="display:flex; align-items:center; gap:5px;">
-                                    <i class="<?= $status_icon ?>" style="color:<?= $status_class === 'pending' ? '#f0ad4e' : '#28a745' ?>;"></i>
-                                    <span class="status <?= $status_class ?>"><?= ucfirst($status_class) ?></span>
-                                </div>
+                                <span class="status <?= $status_class ?>"><?= ucfirst($status_class) ?></span>
                             </div>
-                            <div class="header-bottom" style="display:flex; justify-content:space-between; font-size:14px; margin-top:5px;">
+                            <div style="display:flex; justify-content:space-between; font-size:14px; margin-top:5px;">
                                 <p><i class="fas fa-user"></i> <?= htmlspecialchars($row['username']) ?></p>
                                 <p><i class="fas fa-calendar-alt"></i> <?= date("d M Y", strtotime($row['created_at'])) ?></p>
                             </div>
                         </div>
 
-                        <!-- Card Body -->
                         <div class="card-body" style="margin-top:10px;">
                             <p><strong>Complaint:</strong></p>
-                            <div class="complaint-text">
-                                <?= htmlspecialchars($row['complaint_text']) ?>
-                            </div>
-
-                            <!-- Attachment Link -->
-                           <!-- Attachment Button -->
-<?php if (!empty($row['attachment'])): ?>
-    <div style="margin-top:10px;">
-        <a href="../uploads/<?= htmlspecialchars($row['attachment']) ?>" target="_blank" 
-           style="display:inline-block; background:#3B82F6; color:#fff; padding:6px 12px; border-radius:6px; text-decoration:none;">
-            Attachment: View
-        </a>
-    </div>
-<?php endif; ?>
-
-
-
+                            <div class="complaint-text"><?= htmlspecialchars($row['complaint_text']) ?></div>
                         </div>
 
-                        <!-- Card Footer -->
-                       <!-- Card Footer -->
-<div class="card-footer" style="margin-top:15px;"> <!-- increase margin-top from 10px to 15px -->
-    <a href="update_status.php?id=<?= $row['id'] ?>" class="btn">Update Status</a>
-</div>
-
+                        <div class="card-footer">
+                            <?php if (!empty($row['attachment'])): ?>
+                                <a href="../uploads/<?= htmlspecialchars(basename($row['attachment'])) ?>" target="_blank" class="btn btn-attachment">View Attachment</a>
+                            <?php endif; ?>
+                            <a href="update_status.php?id=<?= $row['id'] ?>" class="btn btn-update">Update Status</a>
+                        </div>
                     </div>
                 <?php endwhile; ?>
             </div>
@@ -126,7 +121,7 @@ $result = $stmt->get_result();
 </div>
 
 <script>
-    // Dynamic search/filter with debouncing
+    // Search/filter auto-update with debounce and URL params
     (function() {
         const searchInput = document.getElementById('searchInput');
         const statusSelect = document.getElementById('statusSelect');
@@ -134,81 +129,32 @@ $result = $stmt->get_result();
         const form = document.getElementById('searchFilterForm');
         let debounceTimer;
 
-        // Update URL and reload page
         function updateURL() {
             const url = new URL(window.location.href);
             const search = searchInput.value.trim();
             const status = statusSelect.value;
             const date = dateInput.value;
 
-            if (search !== '') {
-                url.searchParams.set('search', search);
-            } else {
-                url.searchParams.delete('search');
-            }
+            if (search !== '') url.searchParams.set('search', search);
+            else url.searchParams.delete('search');
 
-            if (status !== '') {
-                url.searchParams.set('status', status);
-            } else {
-                url.searchParams.delete('status');
-            }
+            if (status !== '') url.searchParams.set('status', status);
+            else url.searchParams.delete('status');
 
-            if (date !== '') {
-                url.searchParams.set('date', date);
-            } else {
-                url.searchParams.delete('date');
-            }
-
-            if (document.activeElement === searchInput) {
-                sessionStorage.setItem('searchCursorPosition', searchInput.selectionStart);
-                sessionStorage.setItem('searchWasFocused', 'true');
-            } else {
-                sessionStorage.removeItem('searchWasFocused');
-                sessionStorage.removeItem('searchCursorPosition');
-            }
+            if (date !== '') url.searchParams.set('date', date);
+            else url.searchParams.delete('date');
 
             window.location.href = url.toString();
         }
 
-        window.addEventListener('load', function() {
-            const wasFocused = sessionStorage.getItem('searchWasFocused');
-            const cursorPosition = sessionStorage.getItem('searchCursorPosition');
-
-            if (wasFocused === 'true') {
-                searchInput.focus();
-                if (cursorPosition !== null) {
-                    const pos = parseInt(cursorPosition);
-                    searchInput.setSelectionRange(pos, pos);
-                }
-                sessionStorage.removeItem('searchWasFocused');
-                sessionStorage.removeItem('searchCursorPosition');
-            }
-        });
-
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', () => {
             clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(function() {
-                updateURL();
-            }, 500);
+            debounceTimer = setTimeout(updateURL, 500);
         });
-
-        statusSelect.addEventListener('change', function() {
-            clearTimeout(debounceTimer);
-            sessionStorage.removeItem('searchWasFocused');
-            sessionStorage.removeItem('searchCursorPosition');
-            updateURL();
-        });
-
-        dateInput.addEventListener('change', function() {
-            clearTimeout(debounceTimer);
-            sessionStorage.removeItem('searchWasFocused');
-            sessionStorage.removeItem('searchCursorPosition');
-            updateURL();
-        });
-
-        form.addEventListener('submit', function(e) {
+        statusSelect.addEventListener('change', updateURL);
+        dateInput.addEventListener('change', updateURL);
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
-            clearTimeout(debounceTimer);
             updateURL();
         });
     })();

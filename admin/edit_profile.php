@@ -1,10 +1,16 @@
 <?php
 session_start();
+
+// Prevent browser caching
+header("Cache-Control: no-store, no-cache, must-revalidate, private");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 include __DIR__ . '/../includes/db.php';
 
 // Check if admin is logged in
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: /complaint_management/login.php");
+if ($_SESSION['role'] != 'admin') {
+    header("Location: ../login.php");
     exit;
 }
 
@@ -12,7 +18,7 @@ $pageTitle = "Edit Admin Profile";
 $admin_id = $_SESSION['admin_id'];
 
 // Fetch current admin info
-$stmt = $conn->prepare("SELECT * FROM admins WHERE id = ?");
+$stmt = $conn->prepare("SELECT * FROM users WHERE id=? AND role='admin'");
 $stmt->bind_param("i", $admin_id);
 $stmt->execute();
 $admin = $stmt->get_result()->fetch_assoc();
@@ -24,14 +30,14 @@ $profile_msg_type = "";
 if (isset($_POST['update_profile'])) {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
-    $newImageName = $admin['image']; // default current image
+    $newImageName = $admin['image'];
 
     // Handle image removal
     if (isset($_POST['remove_image']) && $_POST['remove_image'] == 1) {
         if ($admin['image'] && file_exists(__DIR__ . '/../Image/' . $admin['image'])) {
-            unlink(__DIR__ . '/../Image/' . $admin['image']); // delete file
+            unlink(__DIR__ . '/../Image/' . $admin['image']);
         }
-        $newImageName = ''; // clear database field
+        $newImageName = '';
     }
 
     // Handle image upload
@@ -57,17 +63,21 @@ if (isset($_POST['update_profile'])) {
             $profile_msg_type = "error";
         }
     } else if (!$profile_msg) {
-        $stmt = $conn->prepare("UPDATE admins SET username=?, email=?, image=? WHERE id=?");
+        $stmt = $conn->prepare("UPDATE users SET username=?, email=?, image=? WHERE id=? AND role='admin'");
         $stmt->bind_param("sssi", $username, $email, $newImageName, $admin_id);
         if ($stmt->execute()) {
             $profile_msg = "Profile updated successfully.";
             $profile_msg_type = "success";
 
             // Refresh admin data
-            $stmt = $conn->prepare("SELECT * FROM admins WHERE id = ?");
+            $stmt = $conn->prepare("SELECT * FROM users WHERE id=? AND role='admin'");
             $stmt->bind_param("i", $admin_id);
             $stmt->execute();
             $admin = $stmt->get_result()->fetch_assoc();
+
+            echo '<script>
+                setTimeout(() => { window.location.href = "profile.php"; }, 2500);
+            </script>';
         } else {
             $profile_msg = "Error updating profile.";
             $profile_msg_type = "error";
@@ -84,18 +94,18 @@ include __DIR__ . '/../includes/header.php';
             <h2>Edit Admin Profile</h2>
 
             <?php if ($profile_msg): ?>
-                <p id="profileMessage" class="<?php echo $profile_msg_type; ?>"><?php echo $profile_msg; ?></p>
+                <p id="profileMessage" class="<?= $profile_msg_type ?>"><?= $profile_msg ?></p>
             <?php endif; ?>
 
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($admin['username']); ?>" required>
+                    <input type="text" id="username" name="username" value="<?= htmlspecialchars($admin['username']) ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($admin['email']); ?>" required>
+                    <input type="email" id="email" name="email" value="<?= htmlspecialchars($admin['email']) ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -103,8 +113,7 @@ include __DIR__ . '/../includes/header.php';
 
                     <?php if ($admin['image'] && file_exists(__DIR__ . '/../Image/' . $admin['image'])): ?>
                         <div style="margin-bottom:10px; text-align:center;">
-                            <img src="/complaint_management/Image/<?php echo htmlspecialchars($admin['image']); ?>"
-                                alt="Current Profile Image" class="profile-img" style="height:100px; border-radius:50%;">
+                            <img src="/complaint_management/Image/<?= htmlspecialchars($admin['image']) ?>" alt="Current Profile Image" class="profile-img" style="height:100px; border-radius:50%;">
                         </div>
                         <div style="margin-bottom:10px; text-align:center;">
                             <label style="display:inline-flex; align-items:center; gap:5px;">

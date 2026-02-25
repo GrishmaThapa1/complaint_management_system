@@ -1,24 +1,38 @@
 <?php
 session_start();
+
+// Prevent browser caching
+header("Cache-Control: no-store, no-cache, must-revalidate, private");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 include __DIR__ . '/../includes/db.php';
 
 // Check if admin is logged in
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: /complaint_management/login.php");
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
+    header("Location: ../login.php");
     exit;
 }
 
 $pageTitle = "Admin Profile";
 $admin_id = $_SESSION['admin_id'];
 
-// Fetch current admin info
-$stmt = $conn->prepare("SELECT * FROM admins WHERE id = ?");
+// Fetch current admin info from users table
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND role = 'admin'");
 $stmt->bind_param("i", $admin_id);
 $stmt->execute();
 $admin = $stmt->get_result()->fetch_assoc();
 
 include __DIR__ . '/../includes/header.php';
 ?>
+
+<script>
+  window.onpageshow = function(event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  };
+</script>
 
 <body class="profile-page">
     <main class="profile-main">

@@ -179,7 +179,7 @@ if (session_status() == PHP_SESSION_NONE) {
             <?php if (isset($_SESSION['role'])): ?>
                 <div class="mobile-user-info">
                     <i class="fas fa-user-circle"></i>
-                    <strong><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></strong>
+                    <strong><?php echo htmlspecialchars($_SESSION['name'] ?? 'User'); ?></strong>
                 </div>
             <?php endif; ?>
 
@@ -237,7 +237,6 @@ if (session_status() == PHP_SESSION_NONE) {
             closeSidebar.addEventListener('click', closeSidebarFunc);
             sidebarOverlay.addEventListener('click', closeSidebarFunc);
 
-            // Close sidebar when clicking on a link
             const sidebarLinks = mobileSidebar.querySelectorAll('a');
             sidebarLinks.forEach(function(link) {
                 link.addEventListener('click', closeSidebarFunc);

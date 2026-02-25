@@ -1,45 +1,46 @@
 <?php
+ob_start();
 session_start();
 include "../includes/db.php";
-
-// Ensure clean output
 ob_clean();
-header('Content-Type: text/plain');
 
-// Check if user is logged in and ID is sent
-if (!isset($_SESSION['user_id']) || !isset($_POST['id'])) {
-    http_response_code(400);
-    exit("Invalid request");
+if (!isset($_SESSION['user_id'])) {
+    echo "unauthorized";
+    exit;
 }
 
 $user_id = intval($_SESSION['user_id']);
-$notification_id = intval($_POST['id']);
 
-// Step 1: Verify notification exists for this user
-$stmt = $conn->prepare("SELECT status FROM notifications WHERE id=? AND user_id=? LIMIT 1");
-$stmt->bind_param("ii", $notification_id, $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
+    echo "invalid";
+    exit;
+}
 
-if (!$result || $result->num_rows === 0) {
-    exit("No such notification");
+$notif_id = intval($_POST['id']);
+
+$check = $conn->prepare("SELECT status FROM notification WHERE id = ? AND user_id = ?");
+$check->bind_param("ii", $notif_id, $user_id);
+$check->execute();
+$result = $check->get_result();
+
+if ($result->num_rows === 0) {
+    echo "No such notification";
+    exit;
 }
 
 $row = $result->fetch_assoc();
 
-// Step 2: Check if already read
 if ($row['status'] === 'read') {
-    exit("Already read");
+    echo "Already read";
+    exit;
 }
 
-// Step 3: Update status to 'read'
-$stmt = $conn->prepare("UPDATE notifications SET status='read' WHERE id=? AND user_id=?");
-$stmt->bind_param("ii", $notification_id, $user_id);
-$stmt->execute();
+$update = $conn->prepare("UPDATE notification SET status = 'read' WHERE id = ? AND user_id = ?");
+$update->bind_param("ii", $notif_id, $user_id);
 
-// Step 4: Return clean success/fail
-if ($stmt->affected_rows > 0) {
-    exit("success");
+if ($update->execute() && $conn->affected_rows > 0) {
+    echo "success";
 } else {
-    exit("fail");
+    echo "error";
 }
+exit;
