@@ -21,23 +21,29 @@ if (isset($_POST['submit'])) {
 
     if (mysqli_num_rows($result_user) > 0) {
         $user = mysqli_fetch_assoc($result_user);
+
         $_SESSION['role'] = $user['role']; 
         $_SESSION['reset_email'] = $email;
         $_SESSION['otp'] = rand(100000, 999999);
 
         // PHPMailer
         $mail = new PHPMailer(true);
+
         try {
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'grishmathp@gmail.com'; 
-            $mail->Password   = 'txeg lonp ieyh mjul'; 
+
+            // ✅ SECURE WAY (NO HARDCODED PASSWORD)
+            $mail->Username   = getenv('SMTP_USER');
+            $mail->Password   = getenv('SMTP_PASS');
+
             $mail->SMTPSecure = 'tls';
             $mail->Port       = 587;
 
-            $mail->setFrom('grishmathp@gmail.com', 'Complaint Management System');
-            $mail->addAddress('grishmathp@gmail.com'); 
+            $mail->setFrom(getenv('SMTP_USER'), 'Complaint Management System');
+            $mail->addAddress($email); // send OTP to user email
+
             $mail->isHTML(true);
             $mail->Subject = 'Your OTP for Password Reset';
             $mail->Body    = "
@@ -48,9 +54,11 @@ if (isset($_POST['submit'])) {
             $mail->send();
             $message = "OTP sent successfully for <b>{$email}</b>";
             $redirect = true;
+
         } catch (Exception $e) {
             $message = "Mailer Error: {$mail->ErrorInfo}";
         }
+
     } else {
         $message = "Email not found!";
         $_SESSION['role'] = null;
@@ -60,7 +68,6 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,6 +78,7 @@ if (isset($_POST['submit'])) {
 <body class="reset-page">
     <div class="login-container">
         <h2>Reset Password</h2>
+
         <form method="POST" action="">
             <input type="email" name="email" placeholder="Enter your registered email" required>
             <button type="submit" name="submit">Send OTP</button>
@@ -87,12 +95,10 @@ if (isset($_POST['submit'])) {
 
     <?php if ($redirect): ?>
         <script>
-            
             setTimeout(() => {
                 window.location.href = '/complaint_management/verify_otp.php';
             }, 1500);
         </script>
     <?php endif; ?>
 </body>
-
 </html>
